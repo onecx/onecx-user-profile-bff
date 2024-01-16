@@ -1,0 +1,4 @@
+app:
+  name: bff
+  image:
+    repository: "onecx/onecx-user-profile-bff"
