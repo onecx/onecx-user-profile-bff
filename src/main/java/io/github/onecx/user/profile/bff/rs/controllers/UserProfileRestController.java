@@ -12,7 +12,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileV1Api;
+import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileApi;
 import gen.io.github.onecx.user.profile.bff.clients.model.*;
 import gen.io.github.onecx.user.profile.bff.rs.internal.UserProfileApiService;
 import gen.io.github.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
@@ -30,7 +30,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Inject
     @RestClient
-    UserProfileV1Api client;
+    UserProfileApi client;
 
     @Inject
     UserProfileMapper mapper;
@@ -53,7 +53,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response deleteMyUserProfile() {
-        try (Response response = client.deleteUserProfile()) {
+        try (Response response = client.deleteMyUserProfile()) {
             return Response.status(response.getStatus()).build();
         }
     }
@@ -67,7 +67,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getMyUserProfile() {
-        try (Response response = client.getUserProfile()) {
+        try (Response response = client.getMyUserProfile()) {
             var profileResponse = response.readEntity(UserProfile.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(profileResponse)).build();

@@ -30,7 +30,7 @@ public interface UserProfileMapper {
 
     UserProfileAccountSettingsDTO map(UserProfileAccountSettings userProfileAccountSettings);
 
-    UpdateUserPerson map(UpdateUserPersonDTO updateUserPersonDTO);
+    UpdateUserPersonRequest map(UpdateUserPersonDTO updateUserPersonDTO);
 
     UpdateUserSettings map(UpdateUserSettingsDTO updateUserSettingsDTO);
 

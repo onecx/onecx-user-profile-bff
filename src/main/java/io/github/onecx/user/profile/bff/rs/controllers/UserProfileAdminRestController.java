@@ -12,7 +12,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileInternalApi;
+import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileAdminApi;
 import gen.io.github.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
 import gen.io.github.onecx.user.profile.bff.clients.model.UserProfile;
 import gen.io.github.onecx.user.profile.bff.clients.model.UserProfilePageResult;
@@ -31,7 +31,7 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
 
     @Inject
     @RestClient
-    UserProfileInternalApi client;
+    UserProfileAdminApi client;
 
     @Inject
     UserProfileMapper mapper;

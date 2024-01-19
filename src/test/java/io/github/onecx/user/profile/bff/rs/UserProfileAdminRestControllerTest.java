@@ -262,6 +262,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
         update.setAddress(address);
         update.setDisplayName("User 1");
         update.setEmail("user1@cap.de");
+        update.setModificationCount(2);
 
         // Test without apm
         given()
@@ -313,5 +314,26 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .put("/user1")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+
+        // opt lock test
+        problemDetailResponse.setErrorCode("OPTIMISTIC_LOCK");
+        mockServerClient.when(request().withPath("/internal/userProfiles/user5"))
+                .withPriority(100)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(problemDetailResponse)));
+
+        error = given()
+                .when()
+                .header(APM_HEADER_PARAM, createToken("user5", null))
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .body(new UserPersonCriteriaDTO())
+                .put("/user5")
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+        assertThat(error.getErrorCode()).isEqualTo(problemDetailResponse.getErrorCode());
     }
 }

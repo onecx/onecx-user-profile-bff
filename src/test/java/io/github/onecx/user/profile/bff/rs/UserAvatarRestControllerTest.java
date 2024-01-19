@@ -57,7 +57,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
@@ -73,7 +73,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -104,7 +104,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar/avatarId1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId1")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -125,7 +125,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar/avatarId1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId1")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -145,7 +145,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
         assertThat(error.getDetail()).isEqualTo(problem.getDetail());
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar/avatarId2")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId2")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
@@ -173,7 +173,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         info.setUserUploaded(Boolean.FALSE);
         info.setImageUrl("/image/url/big/avatar");
         info.setSmallImageUrl("/image/url/small/avatar");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -197,7 +197,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -233,7 +233,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         info.setUserUploaded(Boolean.FALSE);
         info.setImageUrl("/image/url/big/avatar");
         info.setSmallImageUrl("/image/url/small/avatar");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -258,7 +258,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -281,7 +281,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
     @Test
     void testBadRequestWithoutProblemResponse() {
-        mockServerClient.when(request().withPath("/v1/userProfile/me/avatar")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode()));

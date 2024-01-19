@@ -14,7 +14,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.AvatarV1Api;
+import gen.io.github.onecx.user.profile.bff.clients.api.AvatarApi;
 import gen.io.github.onecx.user.profile.bff.clients.model.ImageInfo;
 import gen.io.github.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
 import gen.io.github.onecx.user.profile.bff.rs.internal.UserAvatarApiService;
@@ -29,7 +29,7 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Inject
     @RestClient
-    AvatarV1Api client;
+    AvatarApi client;
 
     @Inject
     UserProfileMapper mapper;

@@ -66,7 +66,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         userPreference.setDescription(cupDTO.getDescription());
         userPreference.setValue(cupDTO.getValue());
         userPreference.setId("id1");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
                 .withMethod(HttpMethod.POST))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.CREATED.getStatusCode())
@@ -88,7 +88,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
                 .withMethod(HttpMethod.POST))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -118,7 +118,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me")
+        mockServerClient.when(request().withPath("/internal/userProfile/me")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
@@ -134,7 +134,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me")
+        mockServerClient.when(request().withPath("/internal/userProfile/me")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -163,7 +163,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences/pref1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
@@ -179,7 +179,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences/pref1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
                 .withMethod(HttpMethod.DELETE))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -219,7 +219,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         person.setEmail("cap@capgemini.com");
         person.setFirstName("Superuser");
         person.setLastName("Capgeminius");
-        mockServerClient.when(request().withPath("/v1/userProfile/me")
+        mockServerClient.when(request().withPath("/internal/userProfile/me")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -243,7 +243,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me")
+        mockServerClient.when(request().withPath("/internal/userProfile/me")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -280,7 +280,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         UserPersonAddress addresss = new UserPersonAddress();
         addresss.setStreet("Obergasse");
         person.setAddress(addresss);
-        mockServerClient.when(request().withPath("/v1/userProfile/me/person")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -304,7 +304,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/person")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -349,7 +349,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         preference2.setApplicationId("app2");
         preference2.setValue("value2");
         preferences.getPreferences().add(preference2);
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -371,7 +371,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -406,7 +406,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         settings.setColorScheme(ColorScheme.DARK);
         settings.setTimezone("get/muenich");
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/settings")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -430,7 +430,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/settings")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -471,7 +471,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         UserPersonAddress addresss = new UserPersonAddress();
         addresss.setStreet("Obergasse");
         person.setAddress(addresss);
-        mockServerClient.when(request().withPath("/v1/userProfile/me/person")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -495,7 +495,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/person")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -514,6 +514,26 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
         assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+
+        problem.setErrorCode("OPTIMISTIC_LOCK");
+        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
+                .withMethod(HttpMethod.PUT))
+                .withPriority(300)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(problem)));
+
+        error = given()
+                .when()
+                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .put("/person")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+
+        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
     }
 
     @Test
@@ -533,7 +553,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         preference1.setDescription("desc1");
         preference1.setApplicationId("app1");
         preference1.setValue(update);
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences/pref1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
                 .withMethod(HttpMethod.PATCH))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -553,7 +573,7 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(response.getValue()).isEqualTo(update);
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences/pref2")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref2")
                 .withMethod(HttpMethod.PATCH))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
@@ -569,7 +589,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/preferences/pref1")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
                 .withMethod(HttpMethod.PATCH))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -608,7 +628,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         settings.setColorScheme(ColorScheme.LIGHT);
         settings.setTimezone("get/muenich");
 
-        mockServerClient.when(request().withPath("/v1/userProfile/me/settings")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(100)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -633,7 +653,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/v1/userProfile/me/settings")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -652,6 +672,26 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
         assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+
+        problem.setErrorCode("OPTIMISTIC_LOCK");
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
+                .withMethod(HttpMethod.PUT))
+                .withPriority(300)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(problem)));
+
+        error = given()
+                .when()
+                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .put("/settings")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+
+        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
 
     }
 
@@ -674,7 +714,7 @@ class UserProfileRestControllerTest extends AbstractTest {
     @Test
     void testBadRequestWithoutProblemResponse() {
         var update = new UpdateUserSettingsDTO();
-        mockServerClient.when(request().withPath("/v1/userProfile/me/settings")
+        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
                 .withMethod(HttpMethod.PUT))
                 .withPriority(200)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode()));

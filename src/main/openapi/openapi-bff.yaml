@@ -251,7 +251,7 @@ paths:
             schema:
               type: string
               format: binary
-              maxLength:
+              maxLength: 10
       responses:
         '200':
           description: OK
@@ -411,6 +411,9 @@ components:
     UpdateUserPersonRequest:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         firstName:
           type: string
         lastName:
@@ -478,7 +481,7 @@ components:
       properties:
         id:
           type: string
-        version:
+        modificationCount:
           format: int32
           type: integer
         creationDate:
@@ -504,6 +507,9 @@ components:
     UserPerson:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         firstName:
           type: string
         lastName:
@@ -544,6 +550,9 @@ components:
     UpdateUserPerson:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         firstName:
           type: string
         lastName:
@@ -559,6 +568,9 @@ components:
     UpdateUserSettings:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         hideMyProfile:
           type: boolean
         locale:
@@ -572,6 +584,9 @@ components:
     UserProfileAccountSettings:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         hideMyProfile:
           type: boolean
         locale:
@@ -599,7 +614,7 @@ components:
     ImageInfo:
       type: object
       properties:
-        version:
+        modificationCount:
           format: int32
           type: integer
         creationDate:
