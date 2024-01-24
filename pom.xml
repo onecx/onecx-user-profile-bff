@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>0.25.0</version>
+        <version>0.26.0</version>
     </parent>
 
     <artifactId>onecx-user-profile-bff</artifactId>
@@ -70,33 +70,24 @@
             <groupId>org.tkit.quarkus.lib</groupId>
             <artifactId>tkit-quarkus-rest-context</artifactId>
         </dependency>
-        <!-- DEV -->
         <dependency>
-            <groupId>io.quarkiverse.mockserver</groupId>
-            <artifactId>quarkus-mockserver</artifactId>
-            <scope>provided</scope>
+            <groupId>io.github.onecx.quarkus</groupId>
+            <artifactId>onecx-permissions</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc</artifactId>
         </dependency>
 
         <!-- TEST -->
         <dependency>
-            <groupId>org.eclipse.microprofile.jwt</groupId>
-            <artifactId>microprofile-jwt-auth-api</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-test-keycloak-server</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.mockserver</groupId>
             <artifactId>quarkus-mockserver-test</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.swagger.parser.v3</groupId>
-                    <artifactId>swagger-parser</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.parser.v3</groupId>
-            <artifactId>swagger-parser</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -106,6 +97,13 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.github.onecx.quarkus</groupId>
+                        <artifactId>onecx-openapi-generator</artifactId>
+                        <version>0.5.0</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>internal</id>
@@ -120,6 +118,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <additionalProperties>onecx-permissions=true</additionalProperties>
                     <generatorName>jaxrs-spec</generatorName>
                     <apiNameSuffix>ApiService</apiNameSuffix>
                     <modelNameSuffix>DTO</modelNameSuffix>
