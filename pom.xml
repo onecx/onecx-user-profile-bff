@@ -83,6 +83,12 @@
             <artifactId>quarkus-oidc-client-reactive-filter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkiverse.mockserver</groupId>
+            <artifactId>quarkus-mockserver</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -160,9 +166,9 @@
                             <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <url>
+                            <uri>
                                 https://raw.githubusercontent.com/onecx/onecx-user-profile-svc/main/src/main/openapi/onecx-userprofile-internal-openapi.yaml
-                            </url>
+                            </uri>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-userprofile-internal-openapi.yaml</outputFileName>
                             <skipCache>true</skipCache>
