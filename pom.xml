@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>0.26.0</version>
+        <version>0.28.0</version>
     </parent>
 
     <artifactId>onecx-user-profile-bff</artifactId>
@@ -107,13 +107,6 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.github.onecx.quarkus</groupId>
-                        <artifactId>onecx-openapi-generator</artifactId>
-                        <version>0.5.0</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>internal</id>
