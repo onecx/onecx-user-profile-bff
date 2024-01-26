@@ -14,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.quarkiverse.mockserver.test.MockServerTestResource;
 import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.keycloak.client.KeycloakTestClient;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -23,8 +24,28 @@ import io.smallrye.jwt.util.KeyUtils;
 @QuarkusTestResource(MockServerTestResource.class)
 public abstract class AbstractTest {
 
+    protected static final String ADMIN = "alice";
+
+    protected static final String USER = "bob";
+
+    protected static final String MANUAL_ERROR = "MANUAL_ERROR";
+    protected static final String MANUAL_ERROR_DETAIL = "Manual MANUAL_ERROR error detail";
+    protected static final String OPTIMISTIC_LOCK = "OPTIMISTIC_LOCK";
+
+    protected static final String CUSTOM_FLOW_HEADER = "custom-flow";
+
+    protected static final String CFH_ERROR_WITH_CONTENT = "bad_error_content";
+
+    protected static final String CFH_ERROR_NO_CONTENT = "bad_error_no_content";
+
+    protected static final String CFH_ERROR_CONSTRAINT_VIOLATIONS = "bad_error_constraint_violations";
+
+    protected static final String CFH_ERROR_OPT_LOCK = "bad_error_opt_lock";
+
+    KeycloakTestClient keycloakClient = new KeycloakTestClient();
+
     protected static final String APM_HEADER_PARAM = ConfigProvider.getConfig()
-            .getValue("%test.tkit.rs.context.tenant-id.mock.token-header-param", String.class);
+            .getValue("%test.tkit.rs.context.token.header-param", String.class);
 
     protected static final String CLAIMS_ORG_ID = ConfigProvider.getConfig()
             .getValue("%test.tkit.rs.context.tenant-id.mock.claim-org-id", String.class);;

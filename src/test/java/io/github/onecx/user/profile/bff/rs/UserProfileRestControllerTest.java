@@ -3,27 +3,16 @@ package io.github.onecx.user.profile.bff.rs;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.mockserver.model.NottableString.not;
-import static org.mockserver.model.NottableString.string;
 
-import java.util.ArrayList;
-
-import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.model.JsonBody;
-import org.mockserver.model.MediaType;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.io.github.onecx.user.profile.bff.clients.model.*;
 import gen.io.github.onecx.user.profile.bff.rs.internal.model.*;
 import io.github.onecx.user.profile.bff.rs.controllers.UserProfileRestController;
-import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -32,19 +21,6 @@ import io.quarkus.test.junit.QuarkusTest;
 @TestHTTPEndpoint(UserProfileRestController.class)
 class UserProfileRestControllerTest extends AbstractTest {
 
-    @InjectMockServerClient
-    MockServerClient mockServerClient;
-
-    @BeforeEach
-    void resetMockServer() {
-        mockServerClient.reset();
-        // throw 500 if the apm-principal token is not there
-        mockServerClient.when(request().withHeader(not(APM_HEADER_PARAM), string(".*")))
-                .withPriority(999)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()));
-
-    }
-
     @Test
     void createUserPreferenceTest() {
         CreateUserPreferenceDTO cupDTO = new CreateUserPreferenceDTO();
@@ -52,30 +28,30 @@ class UserProfileRestControllerTest extends AbstractTest {
         cupDTO.setName("name1");
         cupDTO.setValue("value1");
         cupDTO.setDescription("desc1");
+
+        // DO NOT send APM token and oauth
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(cupDTO)
                 .post("/preferences")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        UserPreference userPreference = new UserPreference();
-        userPreference.setApplicationId(cupDTO.getApplicationId());
-        userPreference.setName(cupDTO.getName());
-        userPreference.setDescription(cupDTO.getDescription());
-        userPreference.setValue(cupDTO.getValue());
-        userPreference.setId("id1");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
-                .withMethod(HttpMethod.POST))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.CREATED.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(userPreference)));
+        // DO NOT send APM token
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .contentType(APPLICATION_JSON)
+                .body(cupDTO)
+                .post("/preferences")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(cupDTO)
                 .post("/preferences")
@@ -83,21 +59,24 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .extract().as(UserPreferenceDTO.class);
-        assertThat(response.getId()).isEqualTo(userPreference.getId());
+        assertThat(response.getId()).isEqualTo("id1");
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
-                .withMethod(HttpMethod.POST))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        // standard USER get FORBIDDEN with only READ permission
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .body(cupDTO)
+                .post("/preferences")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .body(cupDTO)
                 .post("/preferences")
@@ -105,8 +84,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
     }
 
     @Test
@@ -116,42 +94,39 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .delete()
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        mockServerClient.when(request().withPath("/internal/userProfile/me")
-                .withMethod(HttpMethod.DELETE))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+        // standard USER get FORBIDDEN on delete with only READ permission
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .delete()
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .delete()
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me")
-                .withMethod(HttpMethod.DELETE))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
-
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .delete()
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
     }
 
     @Test
@@ -161,42 +136,39 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .delete("/preferences/pref1")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
-                .withMethod(HttpMethod.DELETE))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+        // FORBIDDEN for standard USER without needed permission
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .delete("/preferences/pref1")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .delete("/preferences/pref1")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
-                .withMethod(HttpMethod.DELETE))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
-
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .delete("/preferences/pref1")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
     }
 
     @Test
@@ -206,29 +178,12 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-
-        UserProfile userProfile = new UserProfile();
-        userProfile.setUserId("user1");
-        userProfile.setOrganization("capgemini");
-        userProfile.setIdentityProvider("database");
-        userProfile.setIdentityProviderId("db");
-        var person = new UserPerson();
-        userProfile.setPerson(person);
-        person.setDisplayName("Capgemini super user");
-        person.setEmail("cap@capgemini.com");
-        person.setFirstName("Superuser");
-        person.setLastName("Capgeminius");
-        mockServerClient.when(request().withPath("/internal/userProfile/me")
-                .withMethod(HttpMethod.GET))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(userProfile)));
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
@@ -237,30 +192,37 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserProfileDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getUserId()).isEqualTo(userProfile.getUserId());
-        assertThat(response.getPerson().getEmail()).isEqualTo(userProfile.getPerson().getEmail());
+        assertThat(response.getUserId()).isEqualTo("user1");
+        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me")
-                .withMethod(HttpMethod.GET))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        // standard USER can make a GET
+        response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .get()
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserProfileDTO.class);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getUserId()).isEqualTo("user1");
+        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
     }
 
     @Test
@@ -270,26 +232,12 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get("/person")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-
-        var person = new UserPerson();
-        person.setDisplayName("Capgemini super user");
-        person.setEmail("cap@capgemini.com");
-        person.setFirstName("Superuser");
-        person.setLastName("Capgeminius");
-        UserPersonAddress addresss = new UserPersonAddress();
-        addresss.setStreet("Obergasse");
-        person.setAddress(addresss);
-        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
-                .withMethod(HttpMethod.GET))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(person)));
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .get("/person")
                 .then()
@@ -298,30 +246,38 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserPersonDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo(person.getEmail());
-        assertThat(response.getAddress().getStreet()).isEqualTo(person.getAddress().getStreet());
+        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getAddress().getStreet()).isEqualTo("Obergasse");
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
-                .withMethod(HttpMethod.GET))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        // standard USER can make a GET
+        response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .get("/person")
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserPersonDTO.class);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getAddress().getStreet()).isEqualTo("Obergasse");
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .get("/person")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
     }
 
     @Test
@@ -331,34 +287,12 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get("/preferences")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-
-        var preferences = new UserPreferences();
-        preferences.setPreferences(new ArrayList<>());
-        UserPreference preference1 = new UserPreference();
-        preference1.setId("1");
-        preference1.setName("name1");
-        preference1.setDescription("desc1");
-        preference1.setApplicationId("app1");
-        preference1.setValue("value1");
-        preferences.getPreferences().add(preference1);
-        UserPreference preference2 = new UserPreference();
-        preference2.setId("2");
-        preference2.setName("name2");
-        preference2.setDescription("desc2");
-        preference2.setApplicationId("app2");
-        preference2.setValue("value2");
-        preferences.getPreferences().add(preference2);
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
-                .withMethod(HttpMethod.GET))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(preferences)));
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .get("/preferences")
                 .then()
@@ -368,27 +302,33 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(response.getPreferences()).hasSize(2);
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences")
-                .withMethod(HttpMethod.GET))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        // standard USER can make a GET
+        response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .get("/preferences")
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserPreferencesDTO.class);
+
+        assertThat(response.getPreferences()).hasSize(2);
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .get("/preferences")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
     }
 
     @Test
@@ -398,24 +338,12 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get("/settings")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-
-        var settings = new UserProfileAccountSettings();
-        settings.setMenuMode(MenuMode.STATIC);
-        settings.setHideMyProfile(false);
-        settings.setColorScheme(ColorScheme.DARK);
-        settings.setTimezone("get/muenich");
-
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.GET))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(settings)));
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .get("/settings")
                 .then()
@@ -424,36 +352,44 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserProfileAccountSettingsDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getHideMyProfile()).isEqualTo(settings.getHideMyProfile());
-        assertThat(response.getMenuMode()).hasToString(settings.getMenuMode().toString());
+        assertThat(response.getHideMyProfile()).isEqualTo(Boolean.FALSE);
+        assertThat(response.getMenuMode()).hasToString("STATIC");
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.GET))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        // standard USER can make a GET
+        response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .get("/settings")
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserProfileAccountSettingsDTO.class);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getHideMyProfile()).isEqualTo(Boolean.FALSE);
+        assertThat(response.getMenuMode()).hasToString("STATIC");
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .get("/settings")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
     }
 
     @Test
     void updateUserPerson() {
         var update = new UpdateUserPersonRequestDTO();
-        update.setEmail("test@email.de");
+        update.setEmail("cap@capgemini.com");
 
         given()
                 .when()
@@ -461,26 +397,23 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .body(update)
                 .put("/person")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        var person = new UserPerson();
-        person.setDisplayName("Capgemini super user");
-        person.setEmail("test@email.de");
-        person.setFirstName("Superuser");
-        person.setLastName("Capgeminius");
-        UserPersonAddress addresss = new UserPersonAddress();
-        addresss.setStreet("Obergasse");
-        person.setAddress(addresss);
-        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(person)));
+        // standard USER will get FORBIDDEN
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .put("/person")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .body(update)
                 .contentType(APPLICATION_JSON)
                 .put("/person")
@@ -490,21 +423,13 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserPersonDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo(person.getEmail());
-
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/person")
@@ -512,20 +437,14 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
-
-        problem.setErrorCode("OPTIMISTIC_LOCK");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/person")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(300)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
 
         error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_OPT_LOCK)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/person")
@@ -533,7 +452,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
+        assertThat(error.getErrorCode()).isEqualTo("OPTIMISTIC_LOCK");
     }
 
     @Test
@@ -545,24 +464,23 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .body(update)
                 .patch("/preferences/pref1")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        UserPreference preference1 = new UserPreference();
-        preference1.setId("1");
-        preference1.setName("name1");
-        preference1.setDescription("desc1");
-        preference1.setApplicationId("app1");
-        preference1.setValue(update);
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
-                .withMethod(HttpMethod.PATCH))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(preference1)));
+        // standard USER has FORBIDDEN for PATCH
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .patch("/preferences/pref1")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .patch("/preferences/pref1")
@@ -573,32 +491,21 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(response.getValue()).isEqualTo(update);
 
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref2")
-                .withMethod(HttpMethod.PATCH))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
         given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .patch("/preferences/pref2")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
 
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/preferences/pref1")
-                .withMethod(HttpMethod.PATCH))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
-
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .patch("/preferences/pref1")
@@ -606,8 +513,8 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
     }
 
     @Test
@@ -618,26 +525,25 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(update)
-                .get("/settings")
+                .put("/settings")
                 .then()
-                .statusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        var settings = new UserProfileAccountSettings();
-        settings.setMenuMode(MenuMode.STATIC);
-        settings.setHideMyProfile(false);
-        settings.setColorScheme(ColorScheme.LIGHT);
-        settings.setTimezone("get/muenich");
-
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(100)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(settings)));
+        // standard USER will get FORBIDDEN for PUT
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType(APPLICATION_JSON)
+                .body(update)
+                .put("/settings")
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/settings")
@@ -647,22 +553,14 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserProfileAccountSettingsDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getHideMyProfile()).isEqualTo(settings.getHideMyProfile());
-        assertThat(response.getMenuMode()).hasToString(settings.getMenuMode().toString());
-
-        ProblemDetailResponse problem = new ProblemDetailResponse();
-        problem.setErrorCode("MANUAL_ERROR");
-        problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        assertThat(response.getHideMyProfile()).isEqualTo(Boolean.FALSE);
+        assertThat(response.getMenuMode()).hasToString("STATIC");
 
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/settings")
@@ -670,20 +568,14 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-        assertThat(error.getDetail()).isEqualTo(problem.getDetail());
-
-        problem.setErrorCode("OPTIMISTIC_LOCK");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(300)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_JSON)
-                        .withBody(JsonBody.json(problem)));
+        assertThat(error.getErrorCode()).isEqualTo(MANUAL_ERROR);
+        assertThat(error.getDetail()).isEqualTo(MANUAL_ERROR_DETAIL);
 
         error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_OPT_LOCK)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/settings")
@@ -691,15 +583,15 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
 
-        assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
-
+        assertThat(error.getErrorCode()).isEqualTo(OPTIMISTIC_LOCK);
     }
 
     @Test
     void testConstraintViolationException() {
         var error = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .put("/settings")
                 .then()
@@ -714,14 +606,12 @@ class UserProfileRestControllerTest extends AbstractTest {
     @Test
     void testBadRequestWithoutProblemResponse() {
         var update = new UpdateUserSettingsDTO();
-        mockServerClient.when(request().withPath("/internal/userProfile/me/settings")
-                .withMethod(HttpMethod.PUT))
-                .withPriority(200)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode()));
 
         var response = given()
                 .when()
-                .header(APM_HEADER_PARAM, createToken("user1", null))
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_NO_CONTENT)
                 .contentType(APPLICATION_JSON)
                 .body(update)
                 .put("/settings");

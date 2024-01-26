@@ -1,0 +1,455 @@
+[
+  {
+    "id": "up1",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/preferences",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 201,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "applicationId": "app1",
+        "name": "name1",
+        "value": "value1",
+        "description": "desc1",
+        "id": "id1"
+      }
+    }
+  },
+  {
+    "id": "up2",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/preferences",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up3",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 204
+    }
+  },
+  {
+    "id": "up4",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up5",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/preferences/pref1",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 204
+    }
+  },
+  {
+    "id": "up6",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/preferences/pref1",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up7",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "userId": "user1",
+        "organization": "capgemini",
+        "identityProvider": "database",
+        "identityProviderId": "db",
+        "person" : {
+          "displayName": "Capgemini super user",
+          "email": "cap@capgemini.com",
+          "firstName": "Superuser",
+          "lastName": "Capgeminius"
+        }
+      }
+    }
+  },
+  {
+    "id": "up8",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up9",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/person"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "displayName": "Capgemini super user",
+        "email": "cap@capgemini.com",
+        "firstName": "Superuser",
+        "lastName": "Capgeminius",
+        "address": {
+          "street": "Obergasse"
+        }
+
+      }
+    }
+  },
+  {
+    "id": "up10",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/person"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up101",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_opt_lock" ]
+      },
+      "path": "/internal/userProfile/me/person"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "OPTIMISTIC_LOCK",
+        "detail": "Manual OPTIMISTIC_LOCK error detail"
+      }
+    }
+  },
+  {
+    "id": "up11",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/preferences",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "preferences": [
+          {
+            "id": "1",
+            "name": "name1",
+            "description": "desc1",
+            "applicationId": "app1",
+            "value": "value1"
+          },
+          {
+            "id": "2",
+            "name": "name2",
+            "description": "desc2",
+            "applicationId": "app2",
+            "value": "value2"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "up12",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/preferences",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up13",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/settings"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "menuMode": "STATIC",
+        "hideMyProfile": false,
+        "colorScheme": "DARK",
+        "timeZone": "get/muenich"
+      }
+    }
+  },
+  {
+    "id": "up14",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/settings"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  },
+  {
+    "id": "up141",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_no_content" ]
+      },
+      "path": "/internal/userProfile/me/settings"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "up142",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_opt_lock" ]
+      },
+      "path": "/internal/userProfile/me/settings"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "OPTIMISTIC_LOCK",
+        "detail": "Manual OPTIMISTIC_LOCK error detail"
+      }
+    }
+  },
+  {
+    "id": "up15",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/preferences/pref1",
+      "method": "PATCH"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "id": "1",
+        "name": "name1",
+        "description": "desc1",
+        "applicationId": "app1",
+        "value": "newValue1"
+      }
+    }
+  },
+  {
+    "id": "up16",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "!custom-flow": [ ".*" ]
+      },
+      "path": "/internal/userProfile/me/preferences/pref2",
+      "method": "PATCH"
+    },
+    "httpResponse": {
+      "statusCode": 404
+    }
+  },
+  {
+    "id": "up17",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/userProfile/me/preferences/pref1",
+      "method": "PATCH"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "errorCode": "MANUAL_ERROR",
+        "detail": "Manual MANUAL_ERROR error detail"
+      }
+    }
+  }
+]
