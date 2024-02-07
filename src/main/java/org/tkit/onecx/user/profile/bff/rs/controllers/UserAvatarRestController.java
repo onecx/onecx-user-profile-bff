@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs.controllers;
+package org.tkit.onecx.user.profile.bff.rs.controllers;
 
 import java.io.File;
 
@@ -12,15 +12,15 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.AvatarApi;
-import gen.io.github.onecx.user.profile.bff.clients.model.ImageInfo;
-import gen.io.github.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
-import gen.io.github.onecx.user.profile.bff.rs.internal.UserAvatarApiService;
-import io.github.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
+import gen.org.tkit.onecx.user.profile.bff.clients.api.AvatarApi;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.ImageInfo;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserAvatarApiService;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)

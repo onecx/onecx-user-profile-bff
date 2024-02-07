@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs.controllers;
+package org.tkit.onecx.user.profile.bff.rs.controllers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,18 +10,18 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileApi;
-import gen.io.github.onecx.user.profile.bff.clients.model.*;
-import gen.io.github.onecx.user.profile.bff.rs.internal.UserProfileApiService;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UpdateUserSettingsDTO;
-import io.github.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
+import gen.org.tkit.onecx.user.profile.bff.clients.api.UserProfileApi;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileApiService;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserSettingsDTO;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)

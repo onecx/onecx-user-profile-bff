@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs.controllers;
+package org.tkit.onecx.user.profile.bff.rs.controllers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,19 +10,19 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileAdminApi;
-import gen.io.github.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
-import gen.io.github.onecx.user.profile.bff.clients.model.UserProfile;
-import gen.io.github.onecx.user.profile.bff.clients.model.UserProfilePageResult;
-import gen.io.github.onecx.user.profile.bff.rs.internal.UserProfileAdminApiService;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonRequestDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UserPersonCriteriaDTO;
-import io.github.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
+import gen.org.tkit.onecx.user.profile.bff.clients.api.UserProfileAdminApi;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.UserProfile;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.UserProfilePageResult;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileAdminApiService;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonRequestDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UserPersonCriteriaDTO;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)

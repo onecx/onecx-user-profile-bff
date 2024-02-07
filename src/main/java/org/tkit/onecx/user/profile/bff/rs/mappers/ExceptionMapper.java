@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs.mappers;
+package org.tkit.onecx.user.profile.bff.rs.mappers;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +14,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailInvalidParamDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailParamDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailInvalidParamDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailParamDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public interface ExceptionMapper {
