@@ -42,14 +42,14 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Override
     public Response deleteUserAvatar() {
-        try (Response response = client.deleteUserAvatar()) {
+        try (Response response = client.deleteUserProfileAvatar()) {
             return Response.status(response.getStatus()).build();
         }
     }
 
     @Override
     public Response getUserAvatar(String id) {
-        try (Response response = client.getUserAvatar(id)) {
+        try (Response response = client.getUserProfileAvatar(id)) {
             var byteResponse = response.readEntity(byte[].class);
             return Response.status(response.getStatus())
                     .entity(byteResponse).build();
@@ -58,7 +58,7 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Override
     public Response getUserAvatarInfo() {
-        try (Response response = client.getUserAvatarInfo()) {
+        try (Response response = client.getUserProfileAvatarInfo()) {
             var imageInfo = response.readEntity(ImageInfo.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(imageInfo)).build();
@@ -67,7 +67,7 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Override
     public Response uploadAvatar(File body) {
-        try (Response response = client.uploadAvatar(body)) {
+        try (Response response = client.uploadUserProfileAvatar(body)) {
             var imageInfo = response.readEntity(ImageInfo.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(imageInfo)).build();

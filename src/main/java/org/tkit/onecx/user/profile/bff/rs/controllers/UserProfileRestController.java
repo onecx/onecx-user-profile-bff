@@ -43,7 +43,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response createUserPreference(CreateUserPreferenceDTO createUserPreferenceDTO) {
-        try (Response response = client.createUserPreference(mapper.map(createUserPreferenceDTO))) {
+        try (Response response = client.createUserProfilePreference(mapper.map(createUserPreferenceDTO))) {
             var preferenceResponse = response.readEntity(UserPreference.class);
             return Response.status(response.getStatus())
                     .location(response.getLocation())
@@ -60,7 +60,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response deleteUserPreference(String id) {
-        try (Response response = client.deleteUserPreference(id)) {
+        try (Response response = client.deleteUserProfilePreference(id)) {
             return Response.status(response.getStatus()).build();
         }
     }
@@ -76,7 +76,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserPerson() {
-        try (Response response = client.getUserPerson()) {
+        try (Response response = client.getUserProfilePerson()) {
             var userPerson = response.readEntity(UserPerson.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPerson)).build();
@@ -85,7 +85,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserPreference() {
-        try (Response response = client.getUserPreference()) {
+        try (Response response = client.getUserProfilePreference()) {
             var userPreferences = response.readEntity(UserPreferences.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPreferences)).build();
@@ -94,7 +94,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserSettings() {
-        try (Response response = client.getUserSettings()) {
+        try (Response response = client.getUserProfileSettings()) {
             var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userProfileAccountSettings)).build();
@@ -103,7 +103,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserPerson(UpdateUserPersonDTO updateUserPersonDTO) {
-        try (Response response = client.updateUserPerson(mapper.map(updateUserPersonDTO))) {
+        try (Response response = client.updateUserProfilePerson(mapper.map(updateUserPersonDTO))) {
             var userPerson = response.readEntity(UserPerson.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPerson)).build();
@@ -112,7 +112,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserPreference(String id, String body) {
-        try (Response response = client.updateUserPreference(id, body)) {
+        try (Response response = client.updateUserProfilePreference(id, body)) {
             var userPreference = response.readEntity(UserPreference.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPreference)).build();
@@ -121,7 +121,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserSettings(UpdateUserSettingsDTO updateUserSettingsDTO) {
-        try (Response response = client.updateUserSettings(mapper.map(updateUserSettingsDTO))) {
+        try (Response response = client.updateUserProfileSettings(mapper.map(updateUserSettingsDTO))) {
             var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userProfileAccountSettings)).build();

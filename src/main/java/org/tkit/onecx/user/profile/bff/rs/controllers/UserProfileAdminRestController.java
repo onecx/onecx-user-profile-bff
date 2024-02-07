@@ -44,14 +44,14 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
 
     @Override
     public Response deleteUserProfile(String id) {
-        try (Response response = client.deleteUserProfile(id)) {
+        try (Response response = client.deleteUserProfileData(id)) {
             return Response.status(response.getStatus()).build();
         }
     }
 
     @Override
     public Response getUserProfile(String id) {
-        try (Response response = client.getUserProfile(id)) {
+        try (Response response = client.getUserProfileData(id)) {
             var userProfile = response.readEntity(UserProfile.class);
             return Response.status(response.getStatus()).entity(mapper.map(userProfile)).build();
         }
@@ -59,7 +59,7 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
 
     @Override
     public Response searchUserProfile(UserPersonCriteriaDTO userPersonCriteriaDTO) {
-        try (Response response = client.searchUserProfile(mapper.map(userPersonCriteriaDTO))) {
+        try (Response response = client.searchUserProfileData(mapper.map(userPersonCriteriaDTO))) {
             var userProfilePageResult = response.readEntity(UserProfilePageResult.class);
             return Response.status(response.getStatus()).entity(mapper.map(userProfilePageResult)).build();
         }
@@ -67,7 +67,7 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
 
     @Override
     public Response updateUserProfile(String id, UpdateUserPersonRequestDTO updateUserPersonRequestDTO) {
-        try (Response response = client.updateUserProfile(id, mapper.map(updateUserPersonRequestDTO))) {
+        try (Response response = client.updateUserProfileData(id, mapper.map(updateUserPersonRequestDTO))) {
             return Response.status(response.getStatus()).build();
         }
     }
