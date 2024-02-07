@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs.controllers;
+package org.tkit.onecx.user.profile.bff.rs.controllers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -10,18 +10,17 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
+import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.api.UserProfileApi;
-import gen.io.github.onecx.user.profile.bff.clients.model.*;
-import gen.io.github.onecx.user.profile.bff.rs.internal.UserProfileApiService;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonDTO;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.UpdateUserSettingsDTO;
-import io.github.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
-import io.github.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
+import gen.org.tkit.onecx.user.profile.bff.clients.api.UserProfileApi;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileApiService;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserSettingsDTO;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
@@ -38,12 +37,9 @@ public class UserProfileRestController implements UserProfileApiService {
     @Inject
     ExceptionMapper exceptionMapper;
 
-    @Inject
-    ProblemDetailMapper problemDetailMapper;
-
     @Override
     public Response createUserPreference(CreateUserPreferenceDTO createUserPreferenceDTO) {
-        try (Response response = client.createUserPreference(mapper.map(createUserPreferenceDTO))) {
+        try (Response response = client.createUserProfilePreference(mapper.map(createUserPreferenceDTO))) {
             var preferenceResponse = response.readEntity(UserPreference.class);
             return Response.status(response.getStatus())
                     .location(response.getLocation())
@@ -60,7 +56,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response deleteUserPreference(String id) {
-        try (Response response = client.deleteUserPreference(id)) {
+        try (Response response = client.deleteUserProfilePreference(id)) {
             return Response.status(response.getStatus()).build();
         }
     }
@@ -76,7 +72,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserPerson() {
-        try (Response response = client.getUserPerson()) {
+        try (Response response = client.getUserProfilePerson()) {
             var userPerson = response.readEntity(UserPerson.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPerson)).build();
@@ -85,7 +81,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserPreference() {
-        try (Response response = client.getUserPreference()) {
+        try (Response response = client.getUserProfilePreference()) {
             var userPreferences = response.readEntity(UserPreferences.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPreferences)).build();
@@ -94,7 +90,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response getUserSettings() {
-        try (Response response = client.getUserSettings()) {
+        try (Response response = client.getUserProfileSettings()) {
             var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userProfileAccountSettings)).build();
@@ -103,7 +99,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserPerson(UpdateUserPersonDTO updateUserPersonDTO) {
-        try (Response response = client.updateUserPerson(mapper.map(updateUserPersonDTO))) {
+        try (Response response = client.updateUserProfilePerson(mapper.map(updateUserPersonDTO))) {
             var userPerson = response.readEntity(UserPerson.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPerson)).build();
@@ -112,7 +108,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserPreference(String id, String body) {
-        try (Response response = client.updateUserPreference(id, body)) {
+        try (Response response = client.updateUserProfilePreference(id, body)) {
             var userPreference = response.readEntity(UserPreference.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userPreference)).build();
@@ -121,7 +117,7 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Override
     public Response updateUserSettings(UpdateUserSettingsDTO updateUserSettingsDTO) {
-        try (Response response = client.updateUserSettings(mapper.map(updateUserSettingsDTO))) {
+        try (Response response = client.updateUserProfileSettings(mapper.map(updateUserSettingsDTO))) {
             var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(userProfileAccountSettings)).build();
@@ -135,18 +131,6 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
-        // if client response is bad request remap bad request to DTO
-        if (ex.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
-            try {
-                var clientError = ex.getResponse().readEntity(ProblemDetailResponse.class);
-                return Response.status(ex.getResponse().getStatus())
-                        .entity(problemDetailMapper.map(clientError)).build();
-            } catch (Exception e) {
-                // ignore error the bad request has not problem detail response object
-                return Response.status(ex.getResponse().getStatus()).build();
-            }
-        } else {
-            return Response.status(ex.getResponse().getStatus()).build();
-        }
+        return exceptionMapper.restException(ex);
     }
 }

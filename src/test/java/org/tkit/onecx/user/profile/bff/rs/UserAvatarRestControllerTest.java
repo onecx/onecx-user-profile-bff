@@ -1,4 +1,4 @@
-package io.github.onecx.user.profile.bff.rs;
+package org.tkit.onecx.user.profile.bff.rs;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -18,11 +18,11 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
+import org.tkit.onecx.user.profile.bff.rs.controllers.UserAvatarRestController;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.io.github.onecx.user.profile.bff.clients.model.*;
-import gen.io.github.onecx.user.profile.bff.rs.internal.model.*;
-import io.github.onecx.user.profile.bff.rs.controllers.UserAvatarRestController;
+import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
