@@ -12,4 +12,4 @@ jobs:
     uses: onecx/ci-quarkus/.github/workflows/build.yml@v1
     secrets: inherit
     with:
-      helmEventTargetRepository: onecx/onecx-theme
+      helmEventTargetRepository: onecx/onecx-user-profile
