@@ -6,20 +6,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import org.tkit.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
 import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.user.profile.bff.clients.api.AvatarApi;
 import gen.org.tkit.onecx.user.profile.bff.clients.model.ImageInfo;
-import gen.org.tkit.onecx.user.profile.bff.clients.model.ProblemDetailResponse;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserAvatarApiService;
 
 @ApplicationScoped
@@ -36,9 +32,6 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Inject
     ExceptionMapper exceptionMapper;
-
-    @Inject
-    ProblemDetailMapper problemDetailMapper;
 
     @Override
     public Response deleteUserAvatar() {
@@ -76,18 +69,6 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
-        // if client response is bad request remap bad request to DTO
-        if (ex.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
-            try {
-                var clientError = ex.getResponse().readEntity(ProblemDetailResponse.class);
-                return Response.status(ex.getResponse().getStatus()).type(MediaType.APPLICATION_JSON_TYPE)
-                        .entity(problemDetailMapper.map(clientError)).build();
-            } catch (Exception e) {
-                // ignore error the bad request has not problem detail response object
-                return Response.status(ex.getResponse().getStatus()).build();
-            }
-        } else {
-            return Response.status(ex.getResponse().getStatus()).build();
-        }
+        return exceptionMapper.restException(ex);
     }
 }

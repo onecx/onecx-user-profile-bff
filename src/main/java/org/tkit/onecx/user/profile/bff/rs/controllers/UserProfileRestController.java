@@ -11,7 +11,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
-import org.tkit.onecx.user.profile.bff.rs.mappers.ProblemDetailMapper;
 import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -37,9 +36,6 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @Inject
     ExceptionMapper exceptionMapper;
-
-    @Inject
-    ProblemDetailMapper problemDetailMapper;
 
     @Override
     public Response createUserPreference(CreateUserPreferenceDTO createUserPreferenceDTO) {
@@ -135,18 +131,6 @@ public class UserProfileRestController implements UserProfileApiService {
 
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
-        // if client response is bad request remap bad request to DTO
-        if (ex.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
-            try {
-                var clientError = ex.getResponse().readEntity(ProblemDetailResponse.class);
-                return Response.status(ex.getResponse().getStatus())
-                        .entity(problemDetailMapper.map(clientError)).build();
-            } catch (Exception e) {
-                // ignore error the bad request has not problem detail response object
-                return Response.status(ex.getResponse().getStatus()).build();
-            }
-        } else {
-            return Response.status(ex.getResponse().getStatus()).build();
-        }
+        return exceptionMapper.restException(ex);
     }
 }
