@@ -2,6 +2,7 @@ package org.tkit.onecx.user.profile.bff.rs;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
 import static jakarta.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpRequest.request;
@@ -14,6 +15,8 @@ import java.nio.file.Files;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
+import org.apache.http.entity.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
@@ -34,6 +37,18 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
+
+    static final String mockId = "MOCK";
+
+    @BeforeEach
+    void resetExpectation() {
+
+        try {
+            mockServerClient.clear(mockId);
+        } catch (Exception ex) {
+            //  mockId not existing
+        }
+    }
 
     @Test
     void deleteUserAvatarTest() {
@@ -85,24 +100,25 @@ class UserAvatarRestControllerTest extends AbstractTest {
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .get("/avatarId1")
+                .get()
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId1")
+        mockServerClient.when(request().withPath("/internal/images/me")
                 .withMethod(HttpMethod.GET))
                 .withPriority(100)
+                .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
-                        .withContentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .withContentType(MediaType.JPEG)
                         .withBody(bytes));
 
         var avatarByteArray = given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .get("/avatarId1")
+                .get()
                 .then()
-                .contentType("application/octet-stream")
+                .contentType(ContentType.IMAGE_JPEG.getMimeType())
                 .statusCode(OK.getStatusCode())
                 .extract().asByteArray();
 
@@ -113,9 +129,10 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
-                .get("/avatarId1")
+                .queryParam("refType", RefTypeDTO.SMALL)
+                .get()
                 .then()
-                .contentType("application/octet-stream")
+                .contentType(ContentType.IMAGE_JPEG.getMimeType())
                 .statusCode(OK.getStatusCode())
                 .extract().asByteArray();
 
@@ -124,9 +141,11 @@ class UserAvatarRestControllerTest extends AbstractTest {
         ProblemDetailResponse problem = new ProblemDetailResponse();
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
-        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId1")
+        resetExpectation();
+        mockServerClient.when(request().withPath("/internal/images/me")
                 .withMethod(HttpMethod.GET))
                 .withPriority(200)
+                .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(problem)));
@@ -135,7 +154,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .get("/avatarId1")
+                .get()
                 .then()
                 .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -145,9 +164,11 @@ class UserAvatarRestControllerTest extends AbstractTest {
         assertThat(error.getErrorCode()).isEqualTo(problem.getErrorCode());
         assertThat(error.getDetail()).isEqualTo(problem.getDetail());
 
-        mockServerClient.when(request().withPath("/internal/userProfile/me/avatar/avatarId2")
+        resetExpectation();
+        mockServerClient.when(request().withPath("/internal/images/me")
                 .withMethod(HttpMethod.GET))
-                .withPriority(200)
+                .withId(mockId)
+                .withPriority(300)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
         given()
@@ -155,68 +176,65 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .get("/avatarId2")
+                .get()
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
-    void getUserAvatarInfoTest() {
+    void getUserAvatarBadRequestTest() throws IOException {
+        File avatar = new File("src/test/resources/data/avatar_test.jpg");
+        byte[] bytes = Files.readAllBytes(avatar.toPath());
+        // do not send content type and dont send image
+        mockServerClient.when(request().withPath("/internal/images/me")
+                .withMethod(HttpMethod.GET))
+                .withPriority(100)
+                .withId(mockId)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
+
         given()
                 .when()
-                .contentType(APPLICATION_JSON)
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .get()
                 .then()
-                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
+                .statusCode(BAD_REQUEST.getStatusCode());
 
-        var response = given()
+        // do not send content type and send image
+        mockServerClient.when(request().withPath("/internal/images/me")
+                .withMethod(HttpMethod.GET))
+                .withPriority(100)
+                .withId(mockId)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withBody(bytes));
+
+        given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .contentType(APPLICATION_JSON)
                 .get()
                 .then()
-                .contentType(APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .extract().as(ImageInfoDTO.class);
+                .statusCode(BAD_REQUEST.getStatusCode());
 
-        assertThat(response).isNotNull();
-        assertThat(response.getImageUrl()).isEqualTo("/image/url/big/avatar");
-        assertThat(response.getSmallImageUrl()).isEqualTo("/image/url/small/avatar");
-
-        // standard USER with READ permission can also make GET
-        response = given()
-                .when()
-                .auth().oauth2(keycloakClient.getAccessToken(USER))
-                .header(APM_HEADER_PARAM, USER)
-                .contentType(APPLICATION_JSON)
-                .get()
-                .then()
-                .contentType(APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .extract().as(ImageInfoDTO.class);
-
-        assertThat(response).isNotNull();
-        assertThat(response.getImageUrl()).isEqualTo("/image/url/big/avatar");
-        assertThat(response.getSmallImageUrl()).isEqualTo("/image/url/small/avatar");
-
-        var error = given()
+        // do not set body but send content type
+        resetExpectation();
+        mockServerClient.when(request().withPath("/internal/images/me")
+                .withMethod(HttpMethod.GET))
+                .withPriority(100)
+                .withId(mockId)
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.JPEG));
+        given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
-                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
-                .contentType(APPLICATION_JSON)
                 .get()
                 .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .extract().as(ProblemDetailResponseDTO.class);
-
-        assertThat(error.getErrorCode()).isEqualTo("MANUAL_ERROR");
-        assertThat(error.getDetail()).isEqualTo("Manual detail of error");
+                .statusCode(BAD_REQUEST.getStatusCode());
     }
 
     @Test
-    void uploadAvatarTest() {
+    void updateAvatarTest() {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         given()
                 .when()
@@ -250,8 +268,6 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .extract().as(ImageInfoDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getImageUrl()).isEqualTo("/image/url/big/avatar");
-        assertThat(response.getSmallImageUrl()).isEqualTo("/image/url/small/avatar");
 
         var error = given()
                 .when()
@@ -261,6 +277,58 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .contentType("image/jpg")
                 .body(avatar)
                 .put()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+
+        assertThat(error.getErrorCode()).isEqualTo("MANUAL_ERROR");
+        assertThat(error.getDetail()).isEqualTo("Manual detail of error");
+    }
+
+    @Test
+    void uploadAvatarTest() {
+        File avatar = new File("src/test/resources/data/avatar_test.jpg");
+        given()
+                .when()
+                .contentType("image/jpg")
+                .body(avatar)
+                .post()
+                .then()
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
+
+        // USER with no WRITE permission will get FORBIDDEN
+        given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(USER))
+                .header(APM_HEADER_PARAM, USER)
+                .contentType("image/jpg")
+                .body(avatar)
+                .post()
+                .then()
+                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
+
+        var response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType("image/jpg")
+                .body(avatar)
+                .post()
+                .then()
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(ImageInfoDTO.class);
+
+        assertThat(response).isNotNull();
+
+        var error = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
+                .contentType("image/jpg")
+                .body(avatar)
+                .post()
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);

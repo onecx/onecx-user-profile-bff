@@ -107,19 +107,6 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>internal</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>src/main/openapi/openapi-bff.yaml</inputSpec>
-                            <apiPackage>gen.org.tkit.onecx.user.profile.bff.rs.internal</apiPackage>
-                            <modelPackage>gen.org.tkit.onecx.user.profile.bff.rs.internal.model</modelPackage>
-                        </configuration>
-                    </execution>
-                </executions>
                 <configuration>
                     <additionalProperties>onecx-permissions=true</additionalProperties>
                     <generatorName>jaxrs-spec</generatorName>
@@ -147,6 +134,22 @@
                         <java17>true</java17>
                     </configOptions>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>internal</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/openapi/openapi-bff.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.user.profile.bff.rs.internal</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.user.profile.bff.rs.internal.model</modelPackage>
+                            <generateModelTests>true</generateModelTests>
+                            <generateModelDocumentation>true</generateModelDocumentation>
+                            <typeMappings>File=byte[]</typeMappings>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
@@ -164,6 +167,21 @@
                             </uri>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-userprofile-internal-openapi.yaml</outputFileName>
+                            <skipCache>true</skipCache>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>image-user-profile-svc-internal</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <uri>
+                                https://raw.githubusercontent.com/onecx/onecx-user-profile-svc/main/src/main/openapi/onecx-image-internal-openapi.yaml
+                            </uri>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>onecx-image-internal-openapi.yaml</outputFileName>
                             <skipCache>true</skipCache>
                         </configuration>
                     </execution>
