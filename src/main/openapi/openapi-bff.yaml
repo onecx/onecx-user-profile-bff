@@ -272,15 +272,23 @@ paths:
             - read
       tags:
         - userAvatar
-      description: Get user avatar info
-      operationId: getUserAvatarInfo
+      description: Get user avatar image
+      operationId: getUserAvatar
+      parameters:
+        - name: refType
+          in: query
+          schema:
+            $ref: "#/components/schemas/RefType"
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            image/*:
               schema:
-                $ref: '#/components/schemas/ImageInfo'
+                minimum: 1
+                maximum: 110000
+                type: string
+                format: binary
         "404":
           description: User avatar not found
     put:
@@ -290,16 +298,70 @@ paths:
             - write
       tags:
         - userAvatar
-      description: Upload user avatar
-      operationId: uploadAvatar
+      description: Update user avatar
+      operationId: updateAvatar
+      parameters:
+        - in: header
+          name: Content-Length
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 110000
+        - name: refType
+          in: query
+          schema:
+            $ref: "#/components/schemas/RefType"
       requestBody:
         required: true
         content:
           'image/*':
             schema:
+              minimum: 1
+              maximum: 110000
               type: string
               format: binary
-              maxLength: 10
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+    post:
+      x-onecx:
+        permissions:
+          user-profile:
+            - write
+      tags:
+        - userAvatar
+      description: Upload user avatar
+      operationId: uploadAvatar
+      parameters:
+        - in: header
+          name: Content-Length
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 110000
+        - name: refType
+          in: query
+          schema:
+            $ref: "#/components/schemas/RefType"
+      requestBody:
+        required: true
+        content:
+          'image/*':
+            schema:
+              minimum: 1
+              maximum: 110000
+              type: string
+              format: binary
       responses:
         '200':
           description: OK
@@ -322,6 +384,11 @@ paths:
         - userAvatar
       description: Delete user's avatar
       operationId: deleteUserAvatar
+      parameters:
+        - name: refType
+          in: query
+          schema:
+            $ref: "#/components/schemas/RefType"
       responses:
         '204':
           description: No Content
@@ -331,34 +398,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /userProfile/me/avatar/{id}:
-    get:
-      x-onecx:
-        permissions:
-          user-profile:
-            - read
-      tags:
-        - userAvatar
-      description: Get the image of user's avatar
-      operationId: getUserAvatar
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-        "404":
-          description: Not found
   /userProfiles/search:
     post:
       x-onecx:
@@ -683,31 +722,14 @@ components:
         - LIGHT
         - DARK
       type: string
+    RefType:
+      type: string
+      enum: [ small, normal ]
     ImageInfo:
       type: object
       properties:
-        modificationCount:
-          format: int32
-          type: integer
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
         id:
           type: string
-        userUploaded:
-          description: flag whether Image was uploaded by user
-          type: boolean
-        imageUrl:
-          type: string
-          example: http://tkit-portal/data/afcc5d0d-6509-497a-8125-614f82b106ae
-        smallImageUrl:
-          type: string
-          example: http://tkit-portal/data/afcc5d0d-6509-497a-8125-614f82asb106ae
     ProblemDetailResponse:
       type: object
       properties:

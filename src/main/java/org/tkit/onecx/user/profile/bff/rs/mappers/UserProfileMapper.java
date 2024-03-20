@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
+import gen.org.tkit.onecx.image.bff.clients.model.ImageInfo;
+import gen.org.tkit.onecx.image.bff.clients.model.RefType;
 import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.*;
 
@@ -33,6 +35,8 @@ public interface UserProfileMapper {
     UpdateUserPersonRequest map(UpdateUserPersonDTO updateUserPersonDTO);
 
     UpdateUserSettings map(UpdateUserSettingsDTO updateUserSettingsDTO);
+
+    RefType map(RefTypeDTO imageInfo);
 
     ImageInfoDTO map(ImageInfo imageInfo);
 }

@@ -5,7 +5,7 @@
       "headers": {
         "apm-principal-token": [ ".*" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "DELETE"
     },
     "httpResponse": {
@@ -20,7 +20,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "DELETE"
     },
     "httpResponse": {
@@ -44,7 +44,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_no_content" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "GET"
     },
     "httpResponse": {
@@ -59,7 +59,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "GET"
     },
     "httpResponse": {
@@ -76,31 +76,6 @@
     }
   },
   {
-    "id": "ua5",
-    "priority": 200,
-    "httpRequest": {
-      "headers": {
-        "apm-principal-token": [ ".*" ]
-      },
-      "path": "/internal/userProfile/me/avatar",
-      "method": "GET"
-    },
-    "httpResponse": {
-      "statusCode": 200,
-      "headers": {
-        "content-type": [
-          "application/json"
-        ]
-      },
-      "body": {
-        "id": "avatarId1",
-        "userUploaded": false,
-        "imageUrl": "/image/url/big/avatar",
-        "smallImageUrl": "/image/url/small/avatar"
-      }
-    }
-  },
-  {
     "id": "ua6",
     "priority": 200,
     "httpRequest": {
@@ -108,7 +83,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_no_content" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "PUT"
     },
     "httpResponse": {
@@ -123,7 +98,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "PUT"
     },
     "httpResponse": {
@@ -146,8 +121,72 @@
       "headers": {
         "apm-principal-token": [ ".*" ]
       },
-      "path": "/internal/userProfile/me/avatar",
+      "path": "/internal/images/me",
       "method": "PUT"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "id": "avatarId1",
+        "userUploaded": false,
+        "imageUrl": "/image/url/big/avatar",
+        "smallImageUrl": "/image/url/small/avatar"
+      }
+    }
+  },
+  {
+    "id": "ua9",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_no_content" ]
+      },
+      "path": "/internal/images/me",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "ua10",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/images/me",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "detail": "Manual detail of error",
+        "errorCode": "MANUAL_ERROR"
+      }
+    }
+  },
+  {
+    "id": "ua11",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ]
+      },
+      "path": "/internal/images/me",
+      "method": "POST"
     },
     "httpResponse": {
       "statusCode": 200,
