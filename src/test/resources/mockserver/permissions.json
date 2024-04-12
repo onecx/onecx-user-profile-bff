@@ -14,7 +14,8 @@
           "appId": "onecx-user-profile-bff",
           "permissions": {
             "user-profile": ["read", "write", "delete"],
-            "permissions": ["admin-write","admin-read"]
+            "permissions": ["admin-write","admin-read"],
+            "kc": ["read", "write", "delete"]
           }
         },
         "contentType": "application/json"
@@ -36,7 +37,8 @@
           "appId": "onecx-user-profile-bff",
           "permissions": {
             "user-profile": ["read"],
-            "permissions": ["admin-write","admin-read"]
+            "permissions": ["admin-write","admin-read"],
+            "kc": ["read"]
           }
         },
         "contentType": "application/json"

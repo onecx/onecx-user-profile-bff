@@ -10,6 +10,7 @@ tags:
   - name: userProfile
   - name: userProfileAdmin
   - name: userAvatar
+  - name: IAM
 paths:
   /userProfile/me:
     get:
@@ -259,6 +260,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserProfileAccountSettings'
         "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /user/password:
+    put:
+      x-onecx:
+        permissions:
+          kc:
+            - write
+      tags:
+        - IAM
+      description: user reset password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResetPasswordRequest'
+      responses:
+        204:
+          description: reset password succeeded
+        400:
           description: Bad request
           content:
             application/json:
@@ -763,6 +789,15 @@ components:
       format: date-time
       type: string
       example: 2022-03-10T12:15:50-04:00
+    UserResetPasswordRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          format: password
+          minLength: 1
   parameters:
     id:
       in: path
