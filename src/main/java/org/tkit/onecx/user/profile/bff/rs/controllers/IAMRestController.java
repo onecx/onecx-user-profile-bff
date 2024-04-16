@@ -14,8 +14,8 @@ import gen.org.tkit.onecx.user.profile.bff.rs.internal.IamApiService;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UserResetPasswordRequestDTO;
 
 @ApplicationScoped
-@Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
+@Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 public class IAMRestController implements IamApiService {
 
     @Inject
