@@ -269,7 +269,7 @@ paths:
     put:
       x-onecx:
         permissions:
-          kc:
+          user-profile:
             - write
       tags:
         - IAM
