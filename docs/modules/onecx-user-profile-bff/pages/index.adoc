@@ -1,0 +1,8 @@
+include::onecx-user-profile-bff-attributes.adoc[opts=optional]
+
+== onecx-user-profile-bff
+
+include::docs.adoc[opts=optional]
+
+
+include::onecx-user-profile-bff-docs.adoc[opts=optional]
