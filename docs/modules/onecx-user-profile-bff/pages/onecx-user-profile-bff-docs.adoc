@@ -1,0 +1,69 @@
+
+include::onecx-user-profile-bff-attributes.adoc[opts=optional]
+
+=== Default properties
+
+.{properties-file}
+[%collapsible%open]
+====
+[source,properties,subs=attributes+]
+----
+quarkus.http.auth.permission.health.paths=/q/*
+quarkus.http.auth.permission.health.policy=permit
+quarkus.http.auth.permission.default.paths=/*
+quarkus.http.auth.permission.default.policy=authenticated
+onecx.permissions.application-id=${quarkus.application.name}
+org.eclipse.microprofile.rest.client.propagateHeaders=apm-principal-token
+%prod.quarkus.rest-client.onecx_user_profile_svc.url=http://onecx-user-profile-svc:8080
+%prod.quarkus.rest-client.onecx_image_svc.url=http://onecx-user-profile-svc:8080
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
+quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
+quarkus.openapi-generator.codegen.spec.onecx_userprofile_internal_openapi_yaml.config-key=onecx_user_profile_svc
+quarkus.openapi-generator.codegen.spec.onecx_userprofile_internal_openapi_yaml.base-package=gen.org.tkit.onecx.user.profile.bff.clients
+quarkus.openapi-generator.codegen.spec.onecx_userprofile_internal_openapi_yaml.return-response=true
+quarkus.openapi-generator.codegen.spec.onecx_userprofile_internal_openapi_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
+quarkus.openapi-generator.codegen.spec.onecx_userprofile_internal_openapi_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.config-key=onecx_image_svc
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.base-package=gen.org.tkit.onecx.image.bff.clients
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.return-response=true
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.additional-api-type-annotations=@org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.type-mappings.File=byte[]
+quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.additional-model-type-annotations=@io.quarkus.runtime.annotations.RegisterForReflection;
+----
+====
+
+=== Extensions
+
+include::onecx-user-profile-bff-extensions.adoc[opts=optional]
+
+=== Container
+
+{docker-registry}[Docker registry]
+
+
+=== Helm
+
+{helm-registry}[Helm registry]
+
+Default values
+
+.{helm-file}
+[source,yaml]
+----
+app:
+  name: bff
+  image:
+    repository: "onecx/onecx-user-profile-bff"
+
+  operator:
+    # Permission
+    permission:
+      enabled: true
+      spec:
+        permissions:
+          user-profile:
+            read: permission on all GET requests and POST search
+            write: permission on PUT, POST, PATCH requests, where objects are saved or updated
+            delete: permission on all DELETE requests
+----
+
