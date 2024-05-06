@@ -301,12 +301,6 @@ paths:
       description: Update user avatar
       operationId: updateAvatar
       parameters:
-        - in: header
-          name: Content-Length
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 110000
         - name: refType
           in: query
           schema:
@@ -343,12 +337,6 @@ paths:
       description: Upload user avatar
       operationId: uploadAvatar
       parameters:
-        - in: header
-          name: Content-Length
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 110000
         - name: refType
           in: query
           schema:
