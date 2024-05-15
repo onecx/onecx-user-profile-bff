@@ -33,6 +33,9 @@ public class UserAvatarRestController implements UserAvatarApiService {
     @Inject
     ExceptionMapper exceptionMapper;
 
+    @Inject
+    HttpHeaders headers;
+
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
         return exceptionMapper.restException(ex);
@@ -68,8 +71,8 @@ public class UserAvatarRestController implements UserAvatarApiService {
     }
 
     @Override
-    public Response updateAvatar(byte[] body, Integer contentLength, RefTypeDTO refType) {
-        try (Response response = client.updateMyImage(body, contentLength, mapper.map(refType))) {
+    public Response updateAvatar(byte[] body, RefTypeDTO refType) {
+        try (Response response = client.updateMyImage(body, headers.getLength(), mapper.map(refType))) {
             var imageInfo = response.readEntity(ImageInfo.class);
 
             return Response.status(response.getStatus())
@@ -78,8 +81,8 @@ public class UserAvatarRestController implements UserAvatarApiService {
     }
 
     @Override
-    public Response uploadAvatar(byte[] body, Integer contentLength, RefTypeDTO refType) {
-        try (Response response = client.uploadMyImage(contentLength, body, mapper.map(refType))) {
+    public Response uploadAvatar(byte[] body, RefTypeDTO refType) {
+        try (Response response = client.uploadMyImage(headers.getLength(), body, mapper.map(refType))) {
             var imageInfo = response.readEntity(ImageInfo.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(imageInfo)).build();
