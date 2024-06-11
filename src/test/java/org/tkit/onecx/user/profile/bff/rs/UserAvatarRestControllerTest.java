@@ -105,7 +105,8 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
         mockServerClient.when(request().withPath("/internal/images/me")
-                .withMethod(HttpMethod.GET))
+                .withMethod(HttpMethod.GET)
+                .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
                 .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -114,11 +115,12 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var avatarByteArray = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .get()
                 .then()
-                .contentType(ContentType.IMAGE_JPEG.getMimeType())
+                .contentType("image/jpeg")
                 .statusCode(OK.getStatusCode())
                 .extract().asByteArray();
 
@@ -129,7 +131,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
-                .queryParam("refType", RefTypeDTO.SMALL)
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .get()
                 .then()
                 .contentType(ContentType.IMAGE_JPEG.getMimeType())
@@ -143,7 +145,8 @@ class UserAvatarRestControllerTest extends AbstractTest {
         problem.setDetail("Manual detail of error");
         resetExpectation();
         mockServerClient.when(request().withPath("/internal/images/me")
-                .withMethod(HttpMethod.GET))
+                .withMethod(HttpMethod.GET)
+                .withQueryStringParameter("refType", "medium"))
                 .withPriority(200)
                 .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -152,6 +155,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var error = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .get()
@@ -173,6 +177,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.LARGE)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
@@ -187,13 +192,15 @@ class UserAvatarRestControllerTest extends AbstractTest {
         byte[] bytes = Files.readAllBytes(avatar.toPath());
         // do not send content type and dont send image
         mockServerClient.when(request().withPath("/internal/images/me")
-                .withMethod(HttpMethod.GET))
+                .withMethod(HttpMethod.GET)
+                .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
                 .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
 
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .get()
@@ -202,7 +209,8 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         // do not send content type and send image
         mockServerClient.when(request().withPath("/internal/images/me")
-                .withMethod(HttpMethod.GET))
+                .withMethod(HttpMethod.GET)
+                .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
                 .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
@@ -210,6 +218,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .get()
@@ -219,13 +228,15 @@ class UserAvatarRestControllerTest extends AbstractTest {
         // do not set body but send content type
         resetExpectation();
         mockServerClient.when(request().withPath("/internal/images/me")
-                .withMethod(HttpMethod.GET))
+                .withMethod(HttpMethod.GET)
+                .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
                 .withId(mockId)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.JPEG));
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .get()
@@ -238,6 +249,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .contentType("image/jpg")
                 .body(avatar)
                 .put()
@@ -247,6 +259,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         // USER with no WRITE permission will get FORBIDDEN
         given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
                 .contentType("image/jpg")
@@ -257,6 +270,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var response = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType("image/jpg")
@@ -271,6 +285,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var error = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.SMALL)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
@@ -309,6 +324,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var response = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType("image/jpg")
@@ -323,6 +339,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         var error = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.SMALL)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
@@ -341,6 +358,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
     void testBadRequestWithoutProblemResponse() {
         var response = given()
                 .when()
+                .queryParam("refType", RefTypeDTO.MEDIUM)
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .header(CUSTOM_FLOW_HEADER, CFH_ERROR_NO_CONTENT)

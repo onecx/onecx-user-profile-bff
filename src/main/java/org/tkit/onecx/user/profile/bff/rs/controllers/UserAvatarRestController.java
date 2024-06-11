@@ -42,8 +42,8 @@ public class UserAvatarRestController implements UserAvatarApiService {
     }
 
     @Override
-    public Response deleteUserAvatar(RefTypeDTO refType) {
-        try (Response response = client.deleteMyImage(mapper.map(refType))) {
+    public Response deleteUserAvatar() {
+        try (Response response = client.deleteMyImage()) {
             return Response.status(response.getStatus()).build();
         }
     }
@@ -71,8 +71,8 @@ public class UserAvatarRestController implements UserAvatarApiService {
     }
 
     @Override
-    public Response updateAvatar(byte[] body, RefTypeDTO refType) {
-        try (Response response = client.updateMyImage(body, headers.getLength(), mapper.map(refType))) {
+    public Response updateAvatar(RefTypeDTO refType, byte[] body) {
+        try (Response response = client.updateMyImage(mapper.map(refType), body, headers.getLength())) {
             var imageInfo = response.readEntity(ImageInfo.class);
 
             return Response.status(response.getStatus())
@@ -81,8 +81,8 @@ public class UserAvatarRestController implements UserAvatarApiService {
     }
 
     @Override
-    public Response uploadAvatar(byte[] body, RefTypeDTO refType) {
-        try (Response response = client.uploadMyImage(headers.getLength(), body, mapper.map(refType))) {
+    public Response uploadAvatar(RefTypeDTO refType, byte[] body) {
+        try (Response response = client.uploadMyImage(headers.getLength(), mapper.map(refType), body)) {
             var imageInfo = response.readEntity(ImageInfo.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(imageInfo)).build();
