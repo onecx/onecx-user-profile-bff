@@ -277,6 +277,7 @@ paths:
       parameters:
         - name: refType
           in: query
+          required: true
           schema:
             $ref: "#/components/schemas/RefType"
       responses:
@@ -303,6 +304,7 @@ paths:
       parameters:
         - name: refType
           in: query
+          required: true
           schema:
             $ref: "#/components/schemas/RefType"
       requestBody:
@@ -339,6 +341,7 @@ paths:
       parameters:
         - name: refType
           in: query
+          required: true
           schema:
             $ref: "#/components/schemas/RefType"
       requestBody:
@@ -372,11 +375,6 @@ paths:
         - userAvatar
       description: Delete user's avatar
       operationId: deleteUserAvatar
-      parameters:
-        - name: refType
-          in: query
-          schema:
-            $ref: "#/components/schemas/RefType"
       responses:
         '204':
           description: No Content
@@ -712,7 +710,7 @@ components:
       type: string
     RefType:
       type: string
-      enum: [ small, normal ]
+      enum: [ small, medium, large ]
     ImageInfo:
       type: object
       properties:
