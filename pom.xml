@@ -171,14 +171,14 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>image-user-profile-svc-internal</id>
+                        <id>image-user-profile-avatar-svc-internal</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>wget</goal>
                         </goals>
                         <configuration>
                             <uri>
-                                https://raw.githubusercontent.com/onecx/onecx-user-profile-svc/main/src/main/openapi/onecx-image-internal-openapi.yaml
+                                https://raw.githubusercontent.com/onecx/onecx-user-profile-avatar-svc/main/src/main/openapi/onecx-user-profile-avatar-internal-openapi.yaml
                             </uri>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-image-internal-openapi.yaml</outputFileName>

@@ -5,7 +5,7 @@
       "headers": {
         "apm-principal-token": [ ".*" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "DELETE"
     },
     "httpResponse": {
@@ -20,7 +20,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "DELETE"
     },
     "httpResponse": {
@@ -44,7 +44,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_no_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "GET"
     },
     "httpResponse": {
@@ -59,7 +59,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "GET"
     },
     "httpResponse": {
@@ -83,7 +83,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_no_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "PUT"
     },
     "httpResponse": {
@@ -98,7 +98,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "PUT"
     },
     "httpResponse": {
@@ -121,7 +121,7 @@
       "headers": {
         "apm-principal-token": [ ".*" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "PUT"
     },
     "httpResponse": {
@@ -147,7 +147,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_no_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "POST"
     },
     "httpResponse": {
@@ -162,7 +162,7 @@
         "apm-principal-token": [ ".*" ],
         "custom-flow": [ "bad_error_content" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "POST"
     },
     "httpResponse": {
@@ -185,7 +185,7 @@
       "headers": {
         "apm-principal-token": [ ".*" ]
       },
-      "path": "/internal/images/me",
+      "path": "/internal/avatar/me",
       "method": "POST"
     },
     "httpResponse": {
