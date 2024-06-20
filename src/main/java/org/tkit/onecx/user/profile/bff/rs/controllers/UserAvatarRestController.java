@@ -13,7 +13,7 @@ import org.tkit.onecx.user.profile.bff.rs.mappers.ExceptionMapper;
 import org.tkit.onecx.user.profile.bff.rs.mappers.UserProfileMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tkit.onecx.image.bff.clients.api.ImagesInternalApi;
+import gen.org.tkit.onecx.image.bff.clients.api.AvatarInternalApi;
 import gen.org.tkit.onecx.image.bff.clients.model.ImageInfo;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserAvatarApiService;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.RefTypeDTO;
@@ -25,7 +25,7 @@ public class UserAvatarRestController implements UserAvatarApiService {
 
     @Inject
     @RestClient
-    ImagesInternalApi client;
+    AvatarInternalApi client;
 
     @Inject
     UserProfileMapper mapper;

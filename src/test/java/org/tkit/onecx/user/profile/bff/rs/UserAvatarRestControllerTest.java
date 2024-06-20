@@ -104,7 +104,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
@@ -144,7 +144,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         problem.setErrorCode("MANUAL_ERROR");
         problem.setDetail("Manual detail of error");
         resetExpectation();
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(200)
@@ -169,7 +169,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         assertThat(error.getDetail()).isEqualTo(problem.getDetail());
 
         resetExpectation();
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET))
                 .withId(mockId)
                 .withPriority(300)
@@ -191,7 +191,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         byte[] bytes = Files.readAllBytes(avatar.toPath());
         // do not send content type and dont send image
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
@@ -208,7 +208,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .statusCode(BAD_REQUEST.getStatusCode());
 
         // do not send content type and send image
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
@@ -227,7 +227,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         // do not set body but send content type
         resetExpectation();
-        mockServerClient.when(request().withPath("/internal/images/me")
+        mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
