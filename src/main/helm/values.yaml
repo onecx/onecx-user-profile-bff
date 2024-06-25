@@ -16,3 +16,6 @@ app:
     keycloak:
       client:
         enabled: true
+        spec:
+          kcConfig:
+            defaultClientScopes: [ ocx-up:all, ocx-pm:read ]
