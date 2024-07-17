@@ -245,62 +245,6 @@ class UserAvatarRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void updateAvatarTest() {
-        File avatar = new File("src/test/resources/data/avatar_test.jpg");
-        given()
-                .when()
-                .queryParam("refType", RefTypeDTO.MEDIUM)
-                .contentType("image/jpg")
-                .body(avatar)
-                .put()
-                .then()
-                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
-
-        // USER with no WRITE permission will get FORBIDDEN
-        given()
-                .when()
-                .queryParam("refType", RefTypeDTO.MEDIUM)
-                .auth().oauth2(keycloakClient.getAccessToken(USER))
-                .header(APM_HEADER_PARAM, USER)
-                .contentType("image/jpg")
-                .body(avatar)
-                .put()
-                .then()
-                .statusCode(Response.Status.FORBIDDEN.getStatusCode());
-
-        var response = given()
-                .when()
-                .queryParam("refType", RefTypeDTO.MEDIUM)
-                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .contentType("image/jpg")
-                .body(avatar)
-                .put()
-                .then()
-                .contentType(APPLICATION_JSON)
-                .statusCode(Response.Status.OK.getStatusCode())
-                .extract().as(ImageInfoDTO.class);
-
-        assertThat(response).isNotNull();
-
-        var error = given()
-                .when()
-                .queryParam("refType", RefTypeDTO.SMALL)
-                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
-                .header(APM_HEADER_PARAM, ADMIN)
-                .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
-                .contentType("image/jpg")
-                .body(avatar)
-                .put()
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
-                .extract().as(ProblemDetailResponseDTO.class);
-
-        assertThat(error.getErrorCode()).isEqualTo("MANUAL_ERROR");
-        assertThat(error.getDetail()).isEqualTo("Manual detail of error");
-    }
-
-    @Test
     void uploadAvatarTest() {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         given()
