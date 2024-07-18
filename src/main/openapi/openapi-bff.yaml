@@ -292,43 +292,6 @@ paths:
                 format: binary
         "404":
           description: User avatar not found
-    put:
-      x-onecx:
-        permissions:
-          user-profile:
-            - write
-      tags:
-        - userAvatar
-      description: Update user avatar
-      operationId: updateAvatar
-      parameters:
-        - name: refType
-          in: query
-          required: true
-          schema:
-            $ref: "#/components/schemas/RefType"
-      requestBody:
-        required: true
-        content:
-          'image/*':
-            schema:
-              minimum: 1
-              maximum: 110000
-              type: string
-              format: binary
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ImageInfo'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
     post:
       x-onecx:
         permissions:
