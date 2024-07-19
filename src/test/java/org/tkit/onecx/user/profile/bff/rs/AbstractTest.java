@@ -48,7 +48,7 @@ public abstract class AbstractTest {
             .getValue("%test.tkit.rs.context.token.header-param", String.class);
 
     protected static final String CLAIMS_ORG_ID = ConfigProvider.getConfig()
-            .getValue("%test.tkit.rs.context.tenant-id.mock.claim-org-id", String.class);;
+            .getValue("%test.tkit.rs.context.tenant-id.mock.claim-org-id", String.class);
 
     static {
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(

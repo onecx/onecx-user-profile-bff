@@ -38,13 +38,13 @@ class UserAvatarRestControllerTest extends AbstractTest {
     @InjectMockServerClient
     MockServerClient mockServerClient;
 
-    static final String mockId = "MOCK";
+    static final String MOCK_ID = "MOCK";
 
     @BeforeEach
     void resetExpectation() {
 
         try {
-            mockServerClient.clear(mockId);
+            mockServerClient.clear(MOCK_ID);
         } catch (Exception ex) {
             //  mockId not existing
         }
@@ -108,7 +108,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.JPEG)
                         .withBody(bytes));
@@ -148,7 +148,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(200)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(problem)));
@@ -171,7 +171,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         resetExpectation();
         mockServerClient.when(request().withPath("/internal/avatar/me")
                 .withMethod(HttpMethod.GET))
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .withPriority(300)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
 
@@ -195,7 +195,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode()));
 
         given()
@@ -212,7 +212,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withBody(bytes));
 
@@ -231,7 +231,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET)
                 .withQueryStringParameter("refType", "medium"))
                 .withPriority(100)
-                .withId(mockId)
+                .withId(MOCK_ID)
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.JPEG));
         given()
