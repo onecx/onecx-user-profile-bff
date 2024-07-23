@@ -287,7 +287,7 @@ paths:
             image/*:
               schema:
                 minimum: 1
-                maximum: 110000
+                maximum: 310000
                 type: string
                 format: binary
         "404":
@@ -313,7 +313,7 @@ paths:
           'image/*':
             schema:
               minimum: 1
-              maximum: 110000
+              maximum: 310000
               type: string
               format: binary
       responses:
