@@ -13,7 +13,7 @@
         "json": {
           "appId": "onecx-user-profile-bff",
           "permissions": {
-            "user-profile": ["read", "write", "delete"],
+            "userProfile": ["read", "write", "delete"],
             "permissions": ["admin-write","admin-read"]
           }
         },
@@ -35,7 +35,7 @@
         "json": {
           "appId": "onecx-user-profile-bff",
           "permissions": {
-            "user-profile": ["read"],
+            "userProfile": ["read"],
             "permissions": ["admin-write","admin-read"]
           }
         },
