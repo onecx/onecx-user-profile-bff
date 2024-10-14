@@ -37,7 +37,7 @@ paths:
     delete:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - delete
       tags:
         - userProfile
@@ -56,7 +56,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfile
@@ -78,7 +78,7 @@ paths:
     post:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userProfile
@@ -113,7 +113,7 @@ paths:
     patch:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userProfile
@@ -145,7 +145,7 @@ paths:
     delete:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - delete
       tags:
         - userProfile
@@ -166,7 +166,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfile
@@ -188,7 +188,7 @@ paths:
     put:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userProfile
@@ -217,7 +217,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfile
@@ -239,7 +239,7 @@ paths:
     put:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userProfile
@@ -268,7 +268,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userAvatar
@@ -295,7 +295,7 @@ paths:
     post:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userAvatar
@@ -332,7 +332,7 @@ paths:
     delete:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - delete
       tags:
         - userAvatar
@@ -351,7 +351,7 @@ paths:
     post:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfileAdmin
@@ -380,7 +380,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfileAdmin
@@ -400,7 +400,7 @@ paths:
     put:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - write
       tags:
         - userProfileAdmin
@@ -428,7 +428,7 @@ paths:
     delete:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - delete
       tags:
         - userProfileAdmin
