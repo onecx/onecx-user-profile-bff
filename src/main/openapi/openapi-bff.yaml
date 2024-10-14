@@ -15,7 +15,7 @@ paths:
     get:
       x-onecx:
         permissions:
-          user-profile:
+          userProfile:
             - read
       tags:
         - userProfile
