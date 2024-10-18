@@ -245,7 +245,9 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .body(new UserPersonCriteriaDTO())
                 .put("/user1")
                 .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+                .contentType(APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserProfileDTO.class);
 
         // standard USER will get FORBIDDEN without WRITE permission
         given()

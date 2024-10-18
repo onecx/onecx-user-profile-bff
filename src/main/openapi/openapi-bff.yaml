@@ -415,8 +415,12 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateUserPersonRequest'
       responses:
-        "204":
-          description: User profile updated
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
         "400":
           description: Bad request
           content:

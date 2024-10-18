@@ -185,7 +185,24 @@
       "method": "PUT"
     },
     "httpResponse": {
-      "statusCode": 204
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "userId": "user1",
+        "organization": "capgemini",
+        "identityProvider": "database",
+        "identityProviderId": "db",
+        "person" : {
+          "displayName": "Capgemini super user",
+          "email": "cap@capgemini.com",
+          "firstName": "Superuser",
+          "lastName": "Capgeminius"
+        }
+      }
     }
   },
   {
