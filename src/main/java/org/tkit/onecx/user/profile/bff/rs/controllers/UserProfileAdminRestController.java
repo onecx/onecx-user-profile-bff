@@ -63,7 +63,8 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
     @Override
     public Response updateUserProfile(String id, UpdateUserPersonRequestDTO updateUserPersonRequestDTO) {
         try (Response response = client.updateUserProfileData(id, mapper.map(updateUserPersonRequestDTO))) {
-            return Response.status(response.getStatus()).build();
+            var userProfile = response.readEntity(UserProfile.class);
+            return Response.status(response.getStatus()).entity(mapper.map(userProfile)).build();
         }
     }
 
