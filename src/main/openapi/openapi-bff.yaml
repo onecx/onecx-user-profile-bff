@@ -347,6 +347,93 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /userProfile/{id}/avatar:
+    get:
+      x-onecx:
+        permissions:
+          userProfile:
+            - read
+      tags:
+        - userAvatarAdmin
+      description: Get user avatar image
+      operationId: getUserAvatarById
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - name: refType
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/RefType"
+      responses:
+        "200":
+          description: OK
+          content:
+            image/*:
+              schema:
+                minimum: 1
+                maximum: 310000
+                type: string
+                format: binary
+        "404":
+          description: User avatar not found
+    post:
+      x-onecx:
+        permissions:
+          userProfile:
+            - write
+      tags:
+        - userAvatarAdmin
+      description: Upload user avatar
+      operationId: uploadAvatarById
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - name: refType
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/RefType"
+      requestBody:
+        required: true
+        content:
+          'image/*':
+            schema:
+              minimum: 1
+              maximum: 310000
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageInfo'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+    delete:
+      x-onecx:
+        permissions:
+          userProfile:
+            - delete
+      tags:
+        - userAvatarAdmin
+      description: Delete user's avatar
+      operationId: deleteUserAvatarById
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          description: No Content
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /userProfiles/search:
     post:
       x-onecx:
