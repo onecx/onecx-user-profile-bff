@@ -35,7 +35,7 @@ public class UserAvatarAdminRestController implements UserAvatarAdminApiService 
     @Inject
     @RestClient
     AvatarInternalApi client;
-    
+
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
         return exceptionMapper.restException(ex);
