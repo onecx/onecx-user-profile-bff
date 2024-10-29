@@ -22,19 +22,20 @@ import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.RefTypeDTO;
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 @LogService
 public class UserAvatarAdminRestController implements UserAvatarAdminApiService {
-    @Inject
-    @RestClient
-    AvatarInternalApi client;
 
     @Inject
-    UserProfileMapper mapper;
+    HttpHeaders headers;
 
     @Inject
     ExceptionMapper exceptionMapper;
 
     @Inject
-    HttpHeaders headers;
+    UserProfileMapper mapper;
 
+    @Inject
+    @RestClient
+    AvatarInternalApi client;
+    
     @ServerExceptionMapper
     public Response restException(WebApplicationException ex) {
         return exceptionMapper.restException(ex);
