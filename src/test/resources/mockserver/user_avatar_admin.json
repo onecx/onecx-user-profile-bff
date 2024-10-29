@@ -1,0 +1,206 @@
+[
+  {
+    "id": "uaa1",
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 204
+    }
+  },
+  {
+    "id": "uaa2",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "DELETE"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "detail": "Manual detail of error",
+        "errorCode": "MANUAL_ERROR"
+      }
+    }
+  },
+  {
+    "id": "uaa3",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_no_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "uaa4",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "GET"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "detail": "Manual detail of error",
+        "errorCode": "MANUAL_ERROR"
+      }
+    }
+  },
+  {
+    "id": "uaa6",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_no_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "PUT"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "uaa7",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "PUT"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "detail": "Manual detail of error",
+        "errorCode": "MANUAL_ERROR"
+      }
+    }
+  },
+  {
+    "id": "uaa8",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "PUT"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "id": "avatarId1",
+        "userUploaded": false,
+        "imageUrl": "/image/url/big/avatar",
+        "smallImageUrl": "/image/url/small/avatar"
+      }
+    }
+  },
+  {
+    "id": "uaa9",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_no_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 400
+    }
+  },
+  {
+    "id": "uaa10",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ],
+        "custom-flow": [ "bad_error_content" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "detail": "Manual detail of error",
+        "errorCode": "MANUAL_ERROR"
+      }
+    }
+  },
+  {
+    "id": "uaa11",
+    "priority": 200,
+    "httpRequest": {
+      "headers": {
+        "apm-principal-token": [ ".*" ]
+      },
+      "path": "/internal/avatar/123",
+      "method": "POST"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "application/json"
+        ]
+      },
+      "body": {
+        "id": "avatarId1",
+        "userUploaded": false,
+        "imageUrl": "/image/url/big/avatar",
+        "smallImageUrl": "/image/url/small/avatar"
+      }
+    }
+  }
+]
