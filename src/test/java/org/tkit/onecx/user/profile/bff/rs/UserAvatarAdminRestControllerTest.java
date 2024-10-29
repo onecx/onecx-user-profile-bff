@@ -100,7 +100,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void getUserAvatarTest() throws IOException {
+    void getUserAvatarAdminTest() throws IOException {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         byte[] bytes = Files.readAllBytes(avatar.toPath());
         given()
@@ -198,7 +198,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void getUserAvatarBadRequestTest() throws IOException {
+    void getUserAvatarAdminBadRequestTest() throws IOException {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         byte[] bytes = Files.readAllBytes(avatar.toPath());
         // do not send content type and dont send image
@@ -259,7 +259,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void uploadAvatarTest() {
+    void uploadAvatarAdminTest() {
         File avatar = new File("src/test/resources/data/avatar_test.jpg");
         given()
                 .when()
@@ -317,7 +317,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
     }
 
     @Test
-    void testBadRequestWithoutProblemResponse() {
+    void testAvatarAdminBadRequestWithoutProblemResponse() {
         var response = given()
                 .when()
                 .queryParam("refType", RefTypeDTO.MEDIUM)
