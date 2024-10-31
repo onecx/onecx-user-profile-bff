@@ -72,6 +72,9 @@ app:
             read: permission on all GET requests and POST search
             write: permission on PUT, POST, PATCH requests, where objects are saved or updated
             delete: permission on all DELETE requests
+            adminRead: permission on all admin related GET requests and POST search
+            adminWrite: permission on all admin related PUT, POST, PATCH requests, where objects are saved or updated
+            adminDelete: permission on all admin related DELETE requests
     keycloak:
       client:
         enabled: true
@@ -79,5 +82,4 @@ app:
           kcConfig:
             defaultClientScopes: [ ocx-up:all, ocx-pm:read ]
 ----
-
 

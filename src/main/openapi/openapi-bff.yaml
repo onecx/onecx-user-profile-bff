@@ -352,7 +352,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - read
+            - adminRead
       tags:
         - userAvatarAdmin
       description: Get user avatar image
@@ -380,7 +380,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - write
+            - adminWrite
       tags:
         - userAvatarAdmin
       description: Upload user avatar
@@ -418,7 +418,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - delete
+            - adminDelete
       tags:
         - userAvatarAdmin
       description: Delete user's avatar
@@ -439,7 +439,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - read
+            - adminRead
       tags:
         - userProfileAdmin
       description: Search for user profiles by search criteria
@@ -468,7 +468,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - read
+            - adminRead
       tags:
         - userProfileAdmin
       description: Return user profile by id
@@ -488,7 +488,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - write
+            - adminWrite
       tags:
         - userProfileAdmin
       description: Update workspace by ID
@@ -520,7 +520,7 @@ paths:
       x-onecx:
         permissions:
           userProfile:
-            - delete
+            - adminDelete
       tags:
         - userProfileAdmin
       description: Delete user profile by ID

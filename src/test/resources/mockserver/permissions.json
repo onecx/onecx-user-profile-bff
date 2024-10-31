@@ -13,7 +13,7 @@
         "json": {
           "appId": "onecx-user-profile-bff",
           "permissions": {
-            "userProfile": ["read", "write", "delete"],
+            "userProfile": ["read", "write", "delete", "adminRead", "adminWrite", "adminDelete"],
             "permissions": ["admin-write","admin-read"]
           }
         },

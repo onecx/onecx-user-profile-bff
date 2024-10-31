@@ -75,11 +75,10 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
         assertThat(response.getUserId()).isEqualTo("user1");
         assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
 
-        // standard USER with READ will also get the response
         response = given()
                 .when()
-                .auth().oauth2(keycloakClient.getAccessToken(USER))
-                .header(APM_HEADER_PARAM, USER)
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .pathParam("id", "user1")
                 .get("/{id}")
                 .then()
@@ -163,12 +162,11 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
         assertThat(response.getSize()).isEqualTo(2);
         assertThat(response.getStream().get(1).getPerson().getEmail()).isEqualTo("user2@cap.de");
 
-        // search also possible with standard USER with only READ permission
         response = given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .auth().oauth2(keycloakClient.getAccessToken(USER))
-                .header(APM_HEADER_PARAM, USER)
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .body(criteriaDTO)
                 .post("/search")
                 .then()
