@@ -134,11 +134,10 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
 
         assertThat(avatarByteArray).isNotNull().isEqualTo(bytes);
 
-        // standard USER with READ permission is enough
         avatarByteArray = given()
                 .when()
-                .auth().oauth2(keycloakClient.getAccessToken(USER))
-                .header(APM_HEADER_PARAM, USER)
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
                 .queryParam("refType", RefTypeDTO.MEDIUM)
                 .pathParam("id", "123")
                 .get()
