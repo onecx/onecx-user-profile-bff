@@ -182,7 +182,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
                 .withPriority(300)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
 
         given()
                 .when()
@@ -193,7 +193,7 @@ class UserAvatarAdminRestControllerTest extends AbstractTest {
                 .pathParam("id", "123")
                 .get()
                 .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

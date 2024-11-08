@@ -173,7 +173,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .withMethod(HttpMethod.GET))
                 .withId(MOCK_ID)
                 .withPriority(300)
-                .respond(httpRequest -> response().withStatusCode(Response.Status.NOT_FOUND.getStatusCode()));
+                .respond(httpRequest -> response().withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
 
         given()
                 .when()
@@ -183,7 +183,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .get()
                 .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

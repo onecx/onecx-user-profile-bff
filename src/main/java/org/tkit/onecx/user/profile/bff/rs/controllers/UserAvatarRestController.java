@@ -55,8 +55,9 @@ public class UserAvatarRestController implements UserAvatarApiService {
             var contentType = response.getHeaderString(HttpHeaders.CONTENT_TYPE);
             var contentLength = response.getHeaderString(HttpHeaders.CONTENT_LENGTH);
             var body = response.readEntity(byte[].class);
-
-            if (contentType != null && body.length != 0) {
+            if (response.getStatus() == 204) {
+                responseBuilder = Response.status(Response.Status.NO_CONTENT);
+            } else if (contentType != null && body.length != 0) {
                 responseBuilder = Response.status(response.getStatus())
                         .header(HttpHeaders.CONTENT_TYPE, contentType)
                         .header(HttpHeaders.CONTENT_LENGTH, contentLength)
