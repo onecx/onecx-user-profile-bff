@@ -290,7 +290,7 @@ paths:
                 maximum: 310000
                 type: string
                 format: binary
-        "404":
+        "204":
           description: User avatar not found
     post:
       x-onecx:
@@ -374,7 +374,7 @@ paths:
                 maximum: 310000
                 type: string
                 format: binary
-        "404":
+        "204":
           description: User avatar not found
     post:
       x-onecx:
