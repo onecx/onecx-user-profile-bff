@@ -73,7 +73,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getUserId()).isEqualTo("user1");
-        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getPerson().getEmail()).isEqualTo("test@testOrg.com");
 
         response = given()
                 .when()
@@ -87,7 +87,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getUserId()).isEqualTo("user1");
-        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getPerson().getEmail()).isEqualTo("test@testOrg.com");
 
         // not found for user 2
         given()
@@ -145,7 +145,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
     void searchUserProfileTest() {
         UserPersonCriteriaDTO criteriaDTO = new UserPersonCriteriaDTO();
         criteriaDTO.setUserId("user1");
-        criteriaDTO.setEmail("*cap.de");
+        criteriaDTO.setEmail("*test.de");
         var response = given()
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -160,7 +160,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getSize()).isEqualTo(2);
-        assertThat(response.getStream().get(1).getPerson().getEmail()).isEqualTo("user2@cap.de");
+        assertThat(response.getStream().get(1).getPerson().getEmail()).isEqualTo("user2@test.de");
 
         response = given()
                 .when()
@@ -176,7 +176,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getSize()).isEqualTo(2);
-        assertThat(response.getStream().get(1).getPerson().getEmail()).isEqualTo("user2@cap.de");
+        assertThat(response.getStream().get(1).getPerson().getEmail()).isEqualTo("user2@test.de");
     }
 
     @Test
@@ -187,7 +187,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
         address.setCity("Muenich");
         update.setAddress(address);
         update.setDisplayName("User 1");
-        update.setEmail("user1@cap.de");
+        update.setEmail("user1@test.de");
         update.setModificationCount(2);
 
         // Test without apm

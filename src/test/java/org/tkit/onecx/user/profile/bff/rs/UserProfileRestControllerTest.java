@@ -191,7 +191,7 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getUserId()).isEqualTo("user1");
-        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getPerson().getEmail()).isEqualTo("test@testOrg.com");
 
         // standard USER can make a GET
         response = given()
@@ -207,7 +207,7 @@ class UserProfileRestControllerTest extends AbstractTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getUserId()).isEqualTo("user1");
-        assertThat(response.getPerson().getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getPerson().getEmail()).isEqualTo("test@testOrg.com");
 
         var error = given()
                 .when()
@@ -244,7 +244,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserPersonDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getEmail()).isEqualTo("test@testOrg.com");
         assertThat(response.getAddress().getStreet()).isEqualTo("Obergasse");
 
         // standard USER can make a GET
@@ -260,7 +260,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserPersonDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getEmail()).isEqualTo("test@testOrg.com");
         assertThat(response.getAddress().getStreet()).isEqualTo("Obergasse");
 
         var error = given()
@@ -387,7 +387,7 @@ class UserProfileRestControllerTest extends AbstractTest {
     @Test
     void updateUserPerson() {
         var update = new UpdateUserPersonRequestDTO();
-        update.setEmail("cap@capgemini.com");
+        update.setEmail("test@testOrg.com");
 
         given()
                 .when()
@@ -421,7 +421,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .extract().as(UserPersonDTO.class);
 
         assertThat(response).isNotNull();
-        assertThat(response.getEmail()).isEqualTo("cap@capgemini.com");
+        assertThat(response.getEmail()).isEqualTo("test@testOrg.com");
 
         var error = given()
                 .when()
