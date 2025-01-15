@@ -44,14 +44,14 @@
       },
       "body": {
         "userId": "user1",
-        "organization": "capgemini",
+        "organization": "testOrg",
         "identityProvider": "database",
         "identityProviderId": "db",
         "person" : {
-          "displayName": "Capgemini super user",
-          "email": "cap@capgemini.com",
+          "displayName": "TestOrg super user",
+          "email": "test@testOrg.com",
           "firstName": "Superuser",
-          "lastName": "Capgeminius"
+          "lastName": "TestOrgus"
         }
       }
     }
@@ -108,7 +108,7 @@
             },
             "person": {
               "displayName": "User 1",
-              "email": "user1@cap.de"
+              "email": "user1@test.de"
             }
           },
           {
@@ -120,7 +120,7 @@
             },
             "person": {
               "displayName": "User 2",
-              "email": "user2@cap.de"
+              "email": "user2@test.de"
             }
           }
         ]
@@ -193,14 +193,14 @@
       },
       "body": {
         "userId": "user1",
-        "organization": "capgemini",
+        "organization": "testOrg",
         "identityProvider": "database",
         "identityProviderId": "db",
         "person" : {
-          "displayName": "Capgemini super user",
-          "email": "cap@capgemini.com",
+          "displayName": "TestOrg super user",
+          "email": "test@testOrg.com",
           "firstName": "Superuser",
-          "lastName": "Capgeminius"
+          "lastName": "TestOrgus"
         }
       }
     }

@@ -141,14 +141,14 @@
       },
       "body": {
         "userId": "user1",
-        "organization": "capgemini",
+        "organization": "testOrg",
         "identityProvider": "database",
         "identityProviderId": "db",
         "person" : {
-          "displayName": "Capgemini super user",
-          "email": "cap@capgemini.com",
+          "displayName": "TestOrg super user",
+          "email": "test@testOrg.com",
           "firstName": "Superuser",
-          "lastName": "Capgeminius"
+          "lastName": "TestOrgus"
         }
       }
     }
@@ -193,10 +193,10 @@
         ]
       },
       "body": {
-        "displayName": "Capgemini super user",
-        "email": "cap@capgemini.com",
+        "displayName": "TestOrg super user",
+        "email": "test@testOrg.com",
         "firstName": "Superuser",
-        "lastName": "Capgeminius",
+        "lastName": "TestOrgus",
         "address": {
           "street": "Obergasse"
         }
