@@ -81,5 +81,9 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-up:all, ocx-pm:read ]
+    microservice:
+      spec:
+        description: OneCX User Profile Backend For Frontend
+        name: OneCX User Profile BFF
 ----
 
