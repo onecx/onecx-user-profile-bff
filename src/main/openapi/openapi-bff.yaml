@@ -660,6 +660,8 @@ components:
           $ref: '#/components/schemas/UserPerson'
         accountSettings:
           $ref: '#/components/schemas/UserProfileAccountSettings'
+        settings:
+          type: object
     UserPerson:
       type: object
       properties:
@@ -737,10 +739,6 @@ components:
           $ref: '#/components/schemas/MenuMode'
         colorScheme:
           $ref: '#/components/schemas/ColorScheme'
-        settings:
-          type: object
-          additionalProperties:
-            type: string
     UserProfileAccountSettings:
       type: object
       properties:
@@ -757,10 +755,6 @@ components:
           $ref: '#/components/schemas/MenuMode'
         colorScheme:
           $ref: '#/components/schemas/ColorScheme'
-        settings:
-          type: object
-          additionalProperties:
-            type: string
     MenuMode:
       enum:
         - STATIC
