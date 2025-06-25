@@ -30,7 +30,6 @@ public interface UserProfileMapper {
     @Mapping(target = "removePreferencesItem", ignore = true)
     UserPreferencesDTO map(UserPreferences userPreferences);
 
-    @Mapping(target = "removeSettingsItem", ignore = true)
     UserProfileAccountSettingsDTO map(UserProfileAccountSettings userProfileAccountSettings);
 
     UpdateUserPersonRequest map(UpdateUserPersonDTO updateUserPersonDTO);
