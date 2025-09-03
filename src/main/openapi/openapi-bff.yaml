@@ -2,7 +2,7 @@
 openapi: 3.0.3
 info:
   title: onecx-user-profile-bff
-  description: OneCx user profile Bff
+  description: OneCX User Profile BFF
   version: "1.0"
 servers:
   - url: http://onecx-user-profile-bff:8080/
@@ -336,7 +336,7 @@ paths:
             - delete
       tags:
         - userAvatar
-      description: Delete user's avatar
+      description: Delete user avatar
       operationId: deleteUserAvatar
       responses:
         '204':
@@ -471,7 +471,7 @@ paths:
             - adminRead
       tags:
         - userProfileAdmin
-      description: Return user profile by id
+      description: Return user profile by ID
       operationId: getUserProfile
       parameters:
         - $ref: '#/components/parameters/id'
@@ -491,7 +491,7 @@ paths:
             - adminWrite
       tags:
         - userProfileAdmin
-      description: Update workspace by ID
+      description: Update user profile by ID
       operationId: updateUserProfile
       parameters:
         - $ref: '#/components/parameters/id'
