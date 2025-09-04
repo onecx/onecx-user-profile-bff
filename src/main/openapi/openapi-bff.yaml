@@ -2,14 +2,17 @@
 openapi: 3.0.3
 info:
   title: onecx-user-profile-bff
-  description: OneCX User Profile BFF
+  description: Backend-For-Frontend (BFF) service for onecx-user-profile. This API provides endpoints to manage User Profiles, Account Settings and Avatars
   version: "1.0"
 servers:
   - url: http://onecx-user-profile-bff:8080/
 tags:
   - name: userProfile
+    description: Managing User Profiles and Settings as an User
   - name: userProfileAdmin
+    description: Managing User Profiles and Settings as an Admin
   - name: userAvatar
+    description: Managing User Avatars
 paths:
   /userProfile/me:
     get:
@@ -19,11 +22,11 @@ paths:
             - read
       tags:
         - userProfile
-      description: Load user profile for current user
+      description: Get the user profile of the requesting user
       operationId: getMyUserProfile
       responses:
         "200":
-          description: User profile of current user
+          description: User profile retrieved successfully
           content:
             application/json:
               schema:
@@ -41,13 +44,13 @@ paths:
             - delete
       tags:
         - userProfile
-      description: Delete user profile for current user
+      description: Delete the user profile of the requesting user
       operationId: deleteMyUserProfile
       responses:
         "204":
-          description: OK
+          description: User profile deleted successfully
         "400":
-          description: Internal Server Error
+          description: Bad request
           content:
             application/json:
               schema:
@@ -60,11 +63,11 @@ paths:
             - read
       tags:
         - userProfile
-      description: Load user preferences for current user
+      description: Get user preferences of the requesting user
       operationId: getUserPreference
       responses:
         "200":
-          description: User profile of current user
+          description: User preferences retrieved successfully
           content:
             application/json:
               schema:
@@ -82,7 +85,7 @@ paths:
             - write
       tags:
         - userProfile
-      description: Create user preference
+      description: Create user preferences for the requesting user
       operationId: createUserPreference
       requestBody:
         required: true
@@ -92,7 +95,7 @@ paths:
               $ref: '#/components/schemas/CreateUserPreference'
       responses:
         "201":
-          description: OK
+          description: Preferences created successfully
           headers:
             Location:
               required: true
@@ -117,7 +120,7 @@ paths:
             - write
       tags:
         - userProfile
-      description: Update preference value
+      description: Update preference values of the requesting user by the id of the preference
       operationId: updateUserPreference
       parameters:
         - $ref: '#/components/parameters/id'
@@ -129,7 +132,7 @@ paths:
               type: string
       responses:
         "200":
-          description: OK
+          description: Preference updated successfully
           content:
             application/json:
               schema:
@@ -149,15 +152,15 @@ paths:
             - delete
       tags:
         - userProfile
-      description: Delete preference by id for current user
+      description: Delete preferences by id of the requesting user
       operationId: deleteUserPreference
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         "204":
-          description: OK
+          description: Preference deleted successfully
         "400":
-          description: Internal Server Error
+          description: Bad request
           content:
             application/json:
               schema:
@@ -170,11 +173,11 @@ paths:
             - read
       tags:
         - userProfile
-      description: Load user person for current user
+      description: Get the user person of the requesting user
       operationId: getUserPerson
       responses:
         "200":
-          description: User person of current user
+          description: User person retrieved successfully
           content:
             application/json:
               schema:
@@ -192,7 +195,7 @@ paths:
             - write
       tags:
         - userProfile
-      description: Update person information
+      description: Update the user person information of the requesting user
       operationId: updateUserPerson
       requestBody:
         required: true
@@ -202,7 +205,7 @@ paths:
               $ref: '#/components/schemas/UpdateUserPerson'
       responses:
         "200":
-          description: OK
+          description: User person updated successfully
           content:
             application/json:
               schema:
@@ -221,11 +224,11 @@ paths:
             - read
       tags:
         - userProfile
-      description: Load user profile account settings for current user
+      description: Load user profile account settings of the requesting user
       operationId: getUserSettings
       responses:
         "200":
-          description: User profile account settings of current user
+          description: Account settings retrieved successfully
           content:
             application/json:
               schema:
@@ -243,7 +246,7 @@ paths:
             - write
       tags:
         - userProfile
-      description: Update user account settings
+      description: Update user account settings of the requesting user
       operationId: updateUserSettings
       requestBody:
         required: true
@@ -253,7 +256,7 @@ paths:
               $ref: '#/components/schemas/UpdateUserSettings'
       responses:
         "200":
-          description: OK
+          description: Account settings updated successfully
           content:
             application/json:
               schema:
@@ -272,7 +275,7 @@ paths:
             - read
       tags:
         - userAvatar
-      description: Get user avatar image
+      description: Get the avatar image of the requesting user
       operationId: getUserAvatar
       parameters:
         - name: refType
@@ -282,7 +285,7 @@ paths:
             $ref: "#/components/schemas/RefType"
       responses:
         "200":
-          description: OK
+          description: Avatar retrieved successfully
           content:
             image/*:
               schema:
@@ -299,7 +302,7 @@ paths:
             - write
       tags:
         - userAvatar
-      description: Upload user avatar
+      description: Upload a avatar image for the requesting user
       operationId: uploadAvatar
       parameters:
         - name: refType
@@ -318,7 +321,7 @@ paths:
               format: binary
       responses:
         '200':
-          description: OK
+          description: Avatar uploaded successfully
           content:
             application/json:
               schema:
@@ -336,11 +339,11 @@ paths:
             - delete
       tags:
         - userAvatar
-      description: Delete user avatar
+      description: Delete the avatar image of the requesting user
       operationId: deleteUserAvatar
       responses:
         '204':
-          description: No Content
+          description: Avatar deleted successfully
         "400":
           description: Bad request
           content:
@@ -355,7 +358,7 @@ paths:
             - adminRead
       tags:
         - userAvatarAdmin
-      description: Get user avatar image
+      description: Get the avatar image of an user by its id
       operationId: getUserAvatarById
       parameters:
         - $ref: '#/components/parameters/id'
@@ -366,7 +369,7 @@ paths:
             $ref: "#/components/schemas/RefType"
       responses:
         "200":
-          description: OK
+          description: Avatar retrieved successfully
           content:
             image/*:
               schema:
@@ -383,7 +386,7 @@ paths:
             - adminWrite
       tags:
         - userAvatarAdmin
-      description: Upload user avatar
+      description: Upload an avatar image for an user by its id
       operationId: uploadAvatarById
       parameters:
         - $ref: '#/components/parameters/id'
@@ -403,7 +406,7 @@ paths:
               format: binary
       responses:
         '200':
-          description: OK
+          description: Avatar uploaded successfully
           content:
             application/json:
               schema:
@@ -421,13 +424,13 @@ paths:
             - adminDelete
       tags:
         - userAvatarAdmin
-      description: Delete user's avatar
+      description: Delete the avatar image of an user by its id
       operationId: deleteUserAvatarById
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         '204':
-          description: No Content
+          description: Avatar deleted successfully
         "400":
           description: Bad request
           content:
@@ -452,7 +455,7 @@ paths:
               $ref: '#/components/schemas/UserPersonCriteria'
       responses:
         "200":
-          description: Corresponding user profiles
+          description: User profile search results retrieved successfully
           content:
             application/json:
               schema:
@@ -471,19 +474,19 @@ paths:
             - adminRead
       tags:
         - userProfileAdmin
-      description: Return user profile by ID
+      description: Get a user profile by its id
       operationId: getUserProfile
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         "200":
-          description: OK
+          description: User profile retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfile'
         "404":
-          description: Not found
+          description: User profile not found
     put:
       x-onecx:
         permissions:
@@ -491,7 +494,7 @@ paths:
             - adminWrite
       tags:
         - userProfileAdmin
-      description: Update user profile by ID
+      description: Update a user profile its id
       operationId: updateUserProfile
       parameters:
         - $ref: '#/components/parameters/id'
@@ -503,7 +506,7 @@ paths:
               $ref: '#/components/schemas/UpdateUserPersonRequest'
       responses:
         "200":
-          description: OK
+          description: User profile updated successfully
           content:
             application/json:
               schema:
@@ -523,15 +526,15 @@ paths:
             - adminDelete
       tags:
         - userProfileAdmin
-      description: Delete user profile by ID
+      description: Delete a user profile by its id
       operationId: deleteUserProfile
       parameters:
         - $ref: '#/components/parameters/id'
       responses:
         "204":
-          description: No Content
+          description: User profile deleted successfully
         "400":
-          description: Internal Server Error
+          description: Bad request
           content:
             application/json:
               schema:
