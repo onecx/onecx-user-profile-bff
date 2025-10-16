@@ -21,22 +21,16 @@ public interface UserProfileMapper {
 
     UpdateUserPersonRequest map(UpdateUserPersonRequestDTO updateUserPersonRequestDTO);
 
-    CreateUserPreference map(CreateUserPreferenceDTO createUserPreferenceDTO);
-
-    UserPreferenceDTO map(UserPreference preferenceResponse);
-
     UserPersonDTO map(UserPerson userPerson);
 
-    @Mapping(target = "removePreferencesItem", ignore = true)
-    UserPreferencesDTO map(UserPreferences userPreferences);
-
+    @Mapping(target = "modificationCount", ignore = true)
     UserProfileAccountSettingsDTO map(UserProfileAccountSettings userProfileAccountSettings);
 
     UpdateUserPersonRequest map(UpdateUserPersonDTO updateUserPersonDTO);
 
-    UpdateUserSettings map(UpdateUserSettingsDTO updateUserSettingsDTO);
-
     RefType map(RefTypeDTO imageInfo);
 
     ImageInfoDTO map(ImageInfo imageInfo);
+
+    UpdateUserProfileRequest mapUpdate(UpdateUserProfileRequestDTO updateUserProfileRequestDTO);
 }
