@@ -25,14 +25,17 @@ import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailRespon
 public interface ExceptionMapper {
 
     default Response restException(WebApplicationException ex) {
-        // if client response is bad request remap bad request to DTO
-        if (ex.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
+        if (ex.getResponse().getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } else if (ex.getResponse().getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else if (ex.getResponse().getStatus() == RestResponse.StatusCode.BAD_REQUEST) {
             try {
-                ProblemDetailResponse clientError = ex.getResponse().readEntity(ProblemDetailResponse.class);
-                return Response.status(ex.getResponse().getStatus()).type(MediaType.APPLICATION_JSON_TYPE)
-                        .entity(map(clientError)).build();
+                return Response.status(ex.getResponse().getStatus())
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .entity(map(ex.getResponse().readEntity(ProblemDetailResponse.class))).build();
             } catch (Exception e) {
-                // ignore error the bad request has not problem detail response object
+                // ignore error the bad request has no problem detail response object
                 return Response.status(ex.getResponse().getStatus()).build();
             }
         } else {
