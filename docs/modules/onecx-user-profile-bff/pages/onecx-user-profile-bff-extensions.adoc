@@ -137,27 +137,3 @@ h| Version
 
 
 |===
-| 
-| 
-| 3.20.2.1
-
-
-|===th
-
-| 
-| 
-| 2.40.0
-
-
-|===ttps://github.com/quarkusio/quarkusio.github.io/blob/develop/_generated-doc/latest/config/quarkus-container-image-docker.adoc[Link]
-| 3.15.1
-
-
-| quarkus-rest-client-oidc-filter
-
-| 
-| 
-| 3.15.1
-
-
-|===
