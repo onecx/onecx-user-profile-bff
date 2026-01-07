@@ -86,7 +86,3 @@ app:
         name: OneCX User Profile BFF
 ----
 
-cription: OneCX User Profile Backend For Frontend
-        name: OneCX User Profile BFF
-----
-
