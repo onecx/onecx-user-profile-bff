@@ -6,10 +6,11 @@
     <parent>
         <groupId>org.tkit.onecx</groupId>
         <artifactId>onecx-quarkus3-parent</artifactId>
-        <version>1.6.0</version>
+        <version>2.3.0</version>
     </parent>
 
     <artifactId>onecx-user-profile-bff</artifactId>
+    <name>OneCX User Profile Backend For Frontend</name>
     <version>999-SNAPSHOT</version>
 
     <dependencies>

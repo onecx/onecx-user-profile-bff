@@ -1,10 +1,12 @@
 
 include::onecx-user-profile-bff-attributes.adoc[opts=optional]
 
-=== Default properties
+{docker-registry}[Link to Docker registry]
+
+== Default properties
 
 .{properties-file}
-[%collapsible%open]
+[%collapsible]
 ====
 [source,properties,subs=attributes+]
 ----
@@ -19,7 +21,7 @@ quarkus.http.filter.images.matches=/me/avatar
 quarkus.http.filter.images.methods=GET
 %prod.quarkus.rest-client.onecx_user_profile_svc.url=http://onecx-user-profile-svc:8080
 %prod.quarkus.rest-client.onecx_image_svc.url=http://onecx-user-profile-avatar-svc:8080
-%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
 %prod.quarkus.rest-client.onecx_user_profile_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 %prod.quarkus.rest-client.onecx_image_svc.providers=io.quarkus.oidc.client.reactive.filter.OidcClientRequestReactiveFilter
 quarkus.openapi-generator.codegen.input-base-dir=target/tmp/openapi
@@ -39,28 +41,22 @@ quarkus.openapi-generator.codegen.spec.onecx_image_internal_openapi_yaml.enable-
 ----
 ====
 
-=== Extensions
-
+== Extensions
+.Extensions List
+[%collapsible]
+====
 include::onecx-user-profile-bff-extensions.adoc[opts=optional]
+====
 
-=== Container
+== Helm
 
-{docker-registry}[Docker registry]
+{helm-registry}[Link to Helm registry]
 
-
-=== Helm
-
-{helm-registry}[Helm registry]
-
-Default values
-
-.{helm-file}
+.Default values in {helm-file}
 [source,yaml]
 ----
 app:
   name: bff
-  template:
-    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-user-profile-bff"
   operator:
@@ -87,4 +83,3 @@ app:
         description: OneCX User Profile Backend For Frontend
         name: OneCX User Profile BFF
 ----
-
