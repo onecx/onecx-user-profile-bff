@@ -181,20 +181,22 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
     @Test
     void updateUserProfileTest() {
-        UpdateUserPersonRequestDTO update = new UpdateUserPersonRequestDTO();
+        UpdateUserProfileRequestDTO update = new UpdateUserProfileRequestDTO();
+        UserPersonDTO userPersonDTO = new UserPersonDTO();
         UserPersonAddressDTO address = new UserPersonAddressDTO();
         address.setStreetNo("10");
         address.setCity("Muenich");
-        update.setAddress(address);
-        update.setDisplayName("User 1");
-        update.setEmail("user1@test.de");
+        userPersonDTO.setAddress(address);
+        userPersonDTO.setDisplayName("User 1");
+        userPersonDTO.setEmail("user1@test.de");
+        update.setPerson(userPersonDTO);
         update.setModificationCount(2);
 
         // Test without apm
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .body(new UpdateUserPersonRequestDTO())
+                .body(new UpdateUserProfileRequestDTO())
                 .put("/user1")
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());

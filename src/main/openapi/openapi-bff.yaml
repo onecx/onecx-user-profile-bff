@@ -319,7 +319,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserPersonRequest'
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
       responses:
         "200":
           description: User profile updated successfully
@@ -359,6 +359,8 @@ components:
   schemas:
     UpdateUserProfileRequest:
       type: object
+      required:
+        - modificationCount
       properties:
         modificationCount:
           format: int32
@@ -391,24 +393,6 @@ components:
           default: 100
           maximum: 1000
           type: integer
-    UpdateUserPersonRequest:
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        displayName:
-          type: string
-        email:
-          type: string
-        address:
-          $ref: '#/components/schemas/UserPersonAddress'
-        phone:
-          $ref: '#/components/schemas/UserPersonPhone'
     UserProfilePageResult:
       type: object
       properties:
@@ -503,24 +487,6 @@ components:
         - MOBILE
         - LANDLINE
       type: string
-    UpdateUserPerson:
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        displayName:
-          type: string
-        email:
-          type: string
-        address:
-          $ref: '#/components/schemas/UserPersonAddress'
-        phone:
-          $ref: '#/components/schemas/UserPersonPhone'
     UserProfileAccountSettings:
       type: object
       properties:

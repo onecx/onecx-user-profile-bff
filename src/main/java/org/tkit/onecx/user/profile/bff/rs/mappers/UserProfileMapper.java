@@ -19,14 +19,12 @@ public interface UserProfileMapper {
     @Mapping(target = "removeStreamItem", ignore = true)
     UserProfilePageResultDTO map(UserProfilePageResult userProfilePageResult);
 
-    UpdateUserPersonRequest map(UpdateUserPersonRequestDTO updateUserPersonRequestDTO);
+    UpdateUserProfileRequest map(UpdateUserProfileRequestDTO updateUserPersonRequestDTO);
 
     UserPersonDTO map(UserPerson userPerson);
 
     @Mapping(target = "modificationCount", ignore = true)
     UserProfileAccountSettingsDTO map(UserProfileAccountSettings userProfileAccountSettings);
-
-    UpdateUserPersonRequest map(UpdateUserPersonDTO updateUserPersonDTO);
 
     RefType map(RefTypeDTO imageInfo);
 
