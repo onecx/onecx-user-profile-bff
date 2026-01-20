@@ -55,139 +55,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
-  /userProfile/me/preferences:
-    get:
-      x-onecx:
-        permissions:
-          userProfile:
-            - read
-      tags:
-        - userProfile
-      description: Get user preferences of the requesting user
-      operationId: getUserPreference
-      responses:
-        "200":
-          description: User preferences retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPreferences'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-    post:
-      x-onecx:
-        permissions:
-          userProfile:
-            - write
-      tags:
-        - userProfile
-      description: Create user preferences for the requesting user
-      operationId: createUserPreference
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserPreference'
-      responses:
-        "201":
-          description: Preferences created successfully
-          headers:
-            Location:
-              required: true
-              schema:
-                type: string
-                format: url
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPreference'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /userProfile/me/preferences/{id}:
-    patch:
-      x-onecx:
-        permissions:
-          userProfile:
-            - write
-      tags:
-        - userProfile
-      description: Update preference values of the requesting user by the id of the preference
-      operationId: updateUserPreference
-      parameters:
-        - $ref: '#/components/parameters/id'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-      responses:
-        "200":
-          description: Preference updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPreference'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-        "404":
-          description: User preference not found
-    delete:
-      x-onecx:
-        permissions:
-          userProfile:
-            - delete
-      tags:
-        - userProfile
-      description: Delete preferences by id of the requesting user
-      operationId: deleteUserPreference
-      parameters:
-        - $ref: '#/components/parameters/id'
-      responses:
-        "204":
-          description: Preference deleted successfully
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /userProfile/me/person:
-    get:
-      x-onecx:
-        permissions:
-          userProfile:
-            - read
-      tags:
-        - userProfile
-      description: Get the user person of the requesting user
-      operationId: getUserPerson
-      responses:
-        "200":
-          description: User person retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserPerson'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
     put:
       x-onecx:
         permissions:
@@ -195,72 +62,21 @@ paths:
             - write
       tags:
         - userProfile
-      description: Update the user person information of the requesting user
-      operationId: updateUserPerson
+      description: Update the user profile of the requesting user
+      operationId: updateMyUserProfile
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserPerson'
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
       responses:
         "200":
-          description: User person updated successfully
+          description: User profile updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserPerson'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-  /userProfile/me/settings:
-    get:
-      x-onecx:
-        permissions:
-          userProfile:
-            - read
-      tags:
-        - userProfile
-      description: Load user profile account settings of the requesting user
-      operationId: getUserSettings
-      responses:
-        "200":
-          description: Account settings retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserProfileAccountSettings'
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetailResponse'
-    put:
-      x-onecx:
-        permissions:
-          userProfile:
-            - write
-      tags:
-        - userProfile
-      description: Update user account settings of the requesting user
-      operationId: updateUserSettings
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateUserSettings'
-      responses:
-        "200":
-          description: Account settings updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserProfileAccountSettings'
+                $ref: '#/components/schemas/UserProfile'
         "400":
           description: Bad request
           content:
@@ -503,7 +319,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserPersonRequest'
+              $ref: '#/components/schemas/UpdateUserProfileRequest'
       responses:
         "200":
           description: User profile updated successfully
@@ -541,6 +357,20 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
+    UpdateUserProfileRequest:
+      type: object
+      required:
+        - modificationCount
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        organization:
+          type: string
+        person:
+          $ref: '#/components/schemas/UserPerson'
+        settings:
+          type: object
     UserPersonCriteria:
       type: object
       properties:
@@ -563,24 +393,6 @@ components:
           default: 100
           maximum: 1000
           type: integer
-    UpdateUserPersonRequest:
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        displayName:
-          type: string
-        email:
-          type: string
-        address:
-          $ref: '#/components/schemas/UserPersonAddress'
-        phone:
-          $ref: '#/components/schemas/UserPersonPhone'
     UserProfilePageResult:
       type: object
       properties:
@@ -601,36 +413,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserProfile'
-    CreateUserPreference:
-      type: object
-      properties:
-        applicationId:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        value:
-          type: string
-    UserPreferences:
-      type: object
-      properties:
-        preferences:
-          items:
-            $ref: '#/components/schemas/UserPreference'
-    UserPreference:
-      type: object
-      properties:
-        id:
-          type: string
-        applicationId:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-        value:
-          type: string
     UserProfile:
       type: object
       properties:
@@ -668,9 +450,6 @@ components:
     UserPerson:
       type: object
       properties:
-        modificationCount:
-          format: int32
-          type: integer
         firstName:
           type: string
         lastName:
@@ -708,40 +487,6 @@ components:
         - MOBILE
         - LANDLINE
       type: string
-    UpdateUserPerson:
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        firstName:
-          type: string
-        lastName:
-          type: string
-        displayName:
-          type: string
-        email:
-          type: string
-        address:
-          $ref: '#/components/schemas/UserPersonAddress'
-        phone:
-          $ref: '#/components/schemas/UserPersonPhone'
-    UpdateUserSettings:
-      type: object
-      properties:
-        modificationCount:
-          format: int32
-          type: integer
-        hideMyProfile:
-          type: boolean
-        locale:
-          type: string
-        timezone:
-          type: string
-        menuMode:
-          $ref: '#/components/schemas/MenuMode'
-        colorScheme:
-          $ref: '#/components/schemas/ColorScheme'
     UserProfileAccountSettings:
       type: object
       properties:

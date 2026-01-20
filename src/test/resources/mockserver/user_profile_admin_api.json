@@ -160,7 +160,11 @@
         "apm-principal-token": [ ".*" ]
       },
       "path": "/internal/userProfiles/user4",
-      "method": "PUT"
+      "method": "PUT",
+      "body": {
+        "type": "JSON",
+        "json": {}
+      }
     },
     "httpResponse": {
       "statusCode": 400,

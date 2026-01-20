@@ -17,10 +17,8 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.user.profile.bff.clients.api.UserProfileApi;
 import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileApiService;
-import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.CreateUserPreferenceDTO;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonDTO;
-import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserSettingsDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserProfileRequestDTO;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
@@ -38,25 +36,8 @@ public class UserProfileRestController implements UserProfileApiService {
     ExceptionMapper exceptionMapper;
 
     @Override
-    public Response createUserPreference(CreateUserPreferenceDTO createUserPreferenceDTO) {
-        try (Response response = client.createUserProfilePreference(mapper.map(createUserPreferenceDTO))) {
-            var preferenceResponse = response.readEntity(UserPreference.class);
-            return Response.status(response.getStatus())
-                    .location(response.getLocation())
-                    .entity(mapper.map(preferenceResponse)).build();
-        }
-    }
-
-    @Override
     public Response deleteMyUserProfile() {
         try (Response response = client.deleteMyUserProfile()) {
-            return Response.status(response.getStatus()).build();
-        }
-    }
-
-    @Override
-    public Response deleteUserPreference(String id) {
-        try (Response response = client.deleteUserProfilePreference(id)) {
             return Response.status(response.getStatus()).build();
         }
     }
@@ -71,56 +52,11 @@ public class UserProfileRestController implements UserProfileApiService {
     }
 
     @Override
-    public Response getUserPerson() {
-        try (Response response = client.getUserProfilePerson()) {
-            var userPerson = response.readEntity(UserPerson.class);
+    public Response updateMyUserProfile(UpdateUserProfileRequestDTO updateUserProfileRequestDTO) {
+        try (Response response = client.updateMyUserProfile(mapper.mapUpdate(updateUserProfileRequestDTO))) {
+            var updateResponse = response.readEntity(UserProfile.class);
             return Response.status(response.getStatus())
-                    .entity(mapper.map(userPerson)).build();
-        }
-    }
-
-    @Override
-    public Response getUserPreference() {
-        try (Response response = client.getUserProfilePreference()) {
-            var userPreferences = response.readEntity(UserPreferences.class);
-            return Response.status(response.getStatus())
-                    .entity(mapper.map(userPreferences)).build();
-        }
-    }
-
-    @Override
-    public Response getUserSettings() {
-        try (Response response = client.getUserProfileSettings()) {
-            var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
-            return Response.status(response.getStatus())
-                    .entity(mapper.map(userProfileAccountSettings)).build();
-        }
-    }
-
-    @Override
-    public Response updateUserPerson(UpdateUserPersonDTO updateUserPersonDTO) {
-        try (Response response = client.updateUserProfilePerson(mapper.map(updateUserPersonDTO))) {
-            var userPerson = response.readEntity(UserPerson.class);
-            return Response.status(response.getStatus())
-                    .entity(mapper.map(userPerson)).build();
-        }
-    }
-
-    @Override
-    public Response updateUserPreference(String id, String body) {
-        try (Response response = client.updateUserProfilePreference(id, body)) {
-            var userPreference = response.readEntity(UserPreference.class);
-            return Response.status(response.getStatus())
-                    .entity(mapper.map(userPreference)).build();
-        }
-    }
-
-    @Override
-    public Response updateUserSettings(UpdateUserSettingsDTO updateUserSettingsDTO) {
-        try (Response response = client.updateUserProfileSettings(mapper.map(updateUserSettingsDTO))) {
-            var userProfileAccountSettings = response.readEntity(UserProfileAccountSettings.class);
-            return Response.status(response.getStatus())
-                    .entity(mapper.map(userProfileAccountSettings)).build();
+                    .entity(mapper.map(updateResponse)).build();
         }
     }
 

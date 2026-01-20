@@ -160,8 +160,7 @@
                         </goals>
                         <configuration>
                             <uri>
-                                https://raw.githubusercontent.com/onecx/onecx-user-profile-svc/main/src/main/openapi/onecx-userprofile-internal.yaml
-                            </uri>
+                                https://raw.githubusercontent.com/onecx/onecx-user-profile-svc/refs/heads/main/src/main/openapi/onecx-userprofile-internal.yaml                            </uri>
                             <outputDirectory>target/tmp/openapi</outputDirectory>
                             <outputFileName>onecx-userprofile-internal-openapi.yaml</outputFileName>
                             <skipCache>true</skipCache>

@@ -19,7 +19,7 @@ import gen.org.tkit.onecx.user.profile.bff.clients.model.UserProfile;
 import gen.org.tkit.onecx.user.profile.bff.clients.model.UserProfilePageResult;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileAdminApiService;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
-import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonRequestDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserProfileRequestDTO;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UserPersonCriteriaDTO;
 
 @ApplicationScoped
@@ -61,8 +61,8 @@ public class UserProfileAdminRestController implements UserProfileAdminApiServic
     }
 
     @Override
-    public Response updateUserProfile(String id, UpdateUserPersonRequestDTO updateUserPersonRequestDTO) {
-        try (Response response = client.updateUserProfileData(id, mapper.map(updateUserPersonRequestDTO))) {
+    public Response updateUserProfile(String id, UpdateUserProfileRequestDTO updateUserProfileRequestDTO) {
+        try (Response response = client.updateUserProfileData(id, mapper.map(updateUserProfileRequestDTO))) {
             var userProfile = response.readEntity(UserProfile.class);
             return Response.status(response.getStatus()).entity(mapper.map(userProfile)).build();
         }

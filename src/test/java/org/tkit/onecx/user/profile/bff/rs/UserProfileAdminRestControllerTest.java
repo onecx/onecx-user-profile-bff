@@ -181,20 +181,22 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
 
     @Test
     void updateUserProfileTest() {
-        UpdateUserPersonRequestDTO update = new UpdateUserPersonRequestDTO();
+        UpdateUserProfileRequestDTO update = new UpdateUserProfileRequestDTO();
+        UserPersonDTO userPersonDTO = new UserPersonDTO();
         UserPersonAddressDTO address = new UserPersonAddressDTO();
         address.setStreetNo("10");
         address.setCity("Muenich");
-        update.setAddress(address);
-        update.setDisplayName("User 1");
-        update.setEmail("user1@test.de");
+        userPersonDTO.setAddress(address);
+        userPersonDTO.setDisplayName("User 1");
+        userPersonDTO.setEmail("user1@test.de");
+        update.setPerson(userPersonDTO);
         update.setModificationCount(2);
 
         // Test without apm
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .body(new UpdateUserPersonRequestDTO())
+                .body(new UpdateUserProfileRequestDTO())
                 .put("/user1")
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
@@ -214,8 +216,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .body(update)
-                .body(new UserPersonCriteriaDTO())
+                .body(new UpdateUserProfileRequestDTO())
                 .put("/user3")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -225,8 +226,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .body(update)
-                .body(new UserPersonCriteriaDTO())
+                .body(new UpdateUserProfileRequestDTO())
                 .put("/user4")
                 .then()
                 .contentType(APPLICATION_JSON)
@@ -240,7 +240,6 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(update)
-                .body(new UserPersonCriteriaDTO())
                 .put("/user1")
                 .then()
                 .contentType(APPLICATION_JSON)
@@ -254,7 +253,6 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, USER)
                 .contentType(APPLICATION_JSON)
                 .body(update)
-                .body(new UserPersonCriteriaDTO())
                 .put("/user1")
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
@@ -266,7 +264,6 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(update)
-                .body(new UserPersonCriteriaDTO())
                 .put("/user5")
                 .then()
                 .contentType(APPLICATION_JSON)
