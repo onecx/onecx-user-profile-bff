@@ -1,2 +1,2 @@
 # onecx-user-profile-bff
-OneCx user-profile BFF
+OneCX User Profile Backend-For-Frontend
