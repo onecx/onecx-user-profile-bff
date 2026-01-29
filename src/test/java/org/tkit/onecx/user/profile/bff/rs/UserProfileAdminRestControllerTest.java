@@ -260,6 +260,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .body(criteriaDTO)
                 .post("/search")
                 .then()
+                .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract().as(UserProfilePageResultDTO.class);
@@ -352,8 +353,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 request()
                         .withPath("/internal/userProfiles/user1")
                         .withMethod(HttpMethod.PUT)
-        //                        .withBody(JsonBody.json(update, MatchType.ONLY_MATCHING_FIELDS))
-        )
+                        .withBody(JsonBody.json(update)))
                 .withId(MOCK_ID).respond(req -> response()
                         .withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
@@ -367,6 +367,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .body(update)
                 .put("/user1")
                 .then()
+                .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
 
