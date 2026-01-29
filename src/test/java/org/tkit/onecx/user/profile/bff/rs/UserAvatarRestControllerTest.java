@@ -69,6 +69,12 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
+        mockServerClient.when(
+                request()
+                        .withMethod(HttpMethod.DELETE))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(Response.Status.NO_CONTENT.getStatusCode()));
+
         given()
                 .when()
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
@@ -77,6 +83,19 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .delete()
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+
+        ProblemDetailResponse delProblem = new ProblemDetailResponse();
+        delProblem.setErrorCode("MANUAL_ERROR");
+        delProblem.setDetail("Manual detail of error");
+
+        mockServerClient.when(
+                request()
+                        .withMethod(HttpMethod.DELETE)
+                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(delProblem)));
 
         var error = given()
                 .when()
@@ -266,6 +285,16 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
+        // dynamic mock
+        mockServerClient.when(
+                request()
+                        .withMethod(HttpMethod.POST)
+                        .withQueryStringParameter("refType", "medium"))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody("{}"));
+
         var response = given()
                 .when()
                 .queryParam("refType", RefTypeDTO.MEDIUM)
@@ -280,6 +309,23 @@ class UserAvatarRestControllerTest extends AbstractTest {
                 .extract().as(ImageInfoDTO.class);
 
         assertThat(response).isNotNull();
+
+        // dynamic mock
+        ProblemDetailResponse upProblem = new ProblemDetailResponse();
+        upProblem.setErrorCode("MANUAL_ERROR");
+        upProblem.setDetail("Manual detail of error");
+
+        resetExpectation();
+
+        mockServerClient.when(
+                request()
+                        .withMethod(HttpMethod.POST)
+                        .withQueryStringParameter("refType", "small")
+                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(BAD_REQUEST.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(upProblem)));
 
         var error = given()
                 .when()
@@ -300,6 +346,16 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
     @Test
     void testBadRequestWithoutProblemResponse() {
+
+        // dynamic mock
+        mockServerClient.when(
+                request()
+                        .withMethod(HttpMethod.GET)
+                        .withQueryStringParameter("refType", "medium")
+                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_NO_CONTENT))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(BAD_REQUEST.getStatusCode()));
+
         var response = given()
                 .when()
                 .queryParam("refType", RefTypeDTO.MEDIUM)
