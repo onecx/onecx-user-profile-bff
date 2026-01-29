@@ -389,11 +389,11 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
         mockServerClient.when(
                 request()
                         .withPath("/internal/userProfiles/user5")
-                        .withMethod(HttpMethod.PUT)
-        ).withId(MOCK_ID).respond(req -> response()
-                .withStatusCode(400)
-                .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
-                .withBody(JsonBody.json(violations)));
+                        .withMethod(HttpMethod.PUT))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(400)
+                        .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(violations)));
 
         // opt lock test
         error = given()
