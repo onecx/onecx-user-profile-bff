@@ -405,6 +405,7 @@ class UserProfileAdminRestControllerTest extends AbstractTest {
                 .body(update)
                 .put("/user5")
                 .then()
+                .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
         assertThat(error.getErrorCode()).isEqualTo("OPTIMISTIC_LOCK");
