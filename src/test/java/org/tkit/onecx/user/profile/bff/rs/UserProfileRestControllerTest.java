@@ -89,8 +89,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         mockServerClient.when(
                 request()
                         .withPath("/internal/userProfile/me")
-                        .withMethod(HttpMethod.DELETE)
-                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                        .withMethod(HttpMethod.DELETE))
                 .withId(MOCK_ID).respond(req -> response()
                         .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -190,8 +189,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         mockServerClient.when(
                 request()
                         .withPath("/internal/userProfile/me")
-                        .withMethod(HttpMethod.GET)
-                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                        .withMethod(HttpMethod.GET))
                 .withId(MOCK_ID).respond(req -> response()
                         .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(org.mockserver.model.MediaType.APPLICATION_JSON) // ← CT

@@ -90,8 +90,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
 
         mockServerClient.when(
                 request()
-                        .withMethod(HttpMethod.DELETE)
-                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                        .withMethod(HttpMethod.DELETE))
                 .withId(MOCK_ID).respond(req -> response()
                         .withStatusCode(Response.Status.BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
@@ -320,8 +319,7 @@ class UserAvatarRestControllerTest extends AbstractTest {
         mockServerClient.when(
                 request()
                         .withMethod(HttpMethod.POST)
-                        .withQueryStringParameter("refType", "small")
-                        .withHeader(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT))
+                        .withQueryStringParameter("refType", "small"))
                 .withId(MOCK_ID).respond(req -> response()
                         .withStatusCode(BAD_REQUEST.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
