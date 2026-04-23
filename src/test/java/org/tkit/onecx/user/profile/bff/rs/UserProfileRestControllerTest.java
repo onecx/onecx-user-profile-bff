@@ -18,6 +18,9 @@ import org.mockserver.model.MediaType;
 import org.tkit.onecx.user.profile.bff.rs.controllers.UserProfileRestController;
 import org.tkit.quarkus.log.cdi.LogService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.*;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -261,5 +264,73 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
         assertThat(response.getPerson().getEmail()).isEqualTo(updateDTO.getPerson().getEmail());
+    }
+
+    @Test
+    void updateMyUserProfileSettings() throws JsonProcessingException {
+        UpdateUserPersonSettingsRequestDTO updateDTO = new UpdateUserPersonSettingsRequestDTO();
+        updateDTO.setModificationCount(0);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object settingsObject = objectMapper.readValue("{\"locale\":\"testLocale\"}", Object.class);
+        updateDTO.setSettings(settingsObject);
+
+        //dynamic mock
+        UserProfileDTO updated = new UserProfileDTO();
+        updated.setSettings(settingsObject);
+
+        mockServerClient.when(
+                request()
+                        .withPath("/internal/userProfile/me/settings")
+                        .withMethod(HttpMethod.PUT)
+                        .withBody(JsonBody.json(updateDTO, MatchType.ONLY_MATCHING_FIELDS)))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(updated)));
+
+        var response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(updateDTO)
+                .put("/settings")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserProfileDTO.class);
+        assertThat(response.getSettings()).isEqualTo(settingsObject);
+    }
+
+    @Test
+    void updateMyUserProfileContact() {
+        UpdateUserPersonContactRequestDTO updateDTO = new UpdateUserPersonContactRequestDTO();
+        updateDTO.setModificationCount(0);
+        updateDTO.setAddress(new UserPersonAddressDTO().street("somestreet"));
+
+        //dynamic mock
+        UserProfileDTO updated = new UserProfileDTO();
+        updated.setPerson(new UserPersonDTO().address(new UserPersonAddressDTO().street("somestreet")));
+
+        mockServerClient.when(
+                request()
+                        .withPath("/internal/userProfile/me/contact")
+                        .withMethod(HttpMethod.PUT)
+                        .withBody(JsonBody.json(updateDTO, MatchType.ONLY_MATCHING_FIELDS)))
+                .withId(MOCK_ID).respond(req -> response()
+                        .withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(updated)));
+
+        var response = given()
+                .when()
+                .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
+                .header(APM_HEADER_PARAM, ADMIN)
+                .contentType(APPLICATION_JSON)
+                .body(updateDTO)
+                .put("/contact")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().as(UserProfileDTO.class);
+        assertThat(response.getPerson().getAddress().getStreet()).isEqualTo(updateDTO.getAddress().getStreet());
     }
 }
