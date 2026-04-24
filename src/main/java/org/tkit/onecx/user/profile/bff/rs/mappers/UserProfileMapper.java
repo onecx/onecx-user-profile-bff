@@ -31,4 +31,8 @@ public interface UserProfileMapper {
     ImageInfoDTO map(ImageInfo imageInfo);
 
     UpdateUserProfileRequest mapUpdate(UpdateUserProfileRequestDTO updateUserProfileRequestDTO);
+
+    UpdateUserPersonContactRequest mapUpdateContact(UpdateUserPersonContactRequestDTO updateUserPersonContactRequestDTO);
+
+    UpdateUserPersonSettingsRequest mapUpdateSettings(UpdateUserPersonSettingsRequestDTO updateUserPersonSettingsRequestDTO);
 }

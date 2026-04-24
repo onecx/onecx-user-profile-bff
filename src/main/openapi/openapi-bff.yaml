@@ -83,6 +83,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /userProfile/me/settings:
+    put:
+      x-onecx:
+        permissions:
+          userProfile:
+            - write
+      tags:
+        - userProfile
+      description: Update the user profile settings of the requesting user
+      operationId: updateMyUserProfileSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserPersonSettingsRequest'
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /userProfile/me/contact:
+    put:
+      x-onecx:
+        permissions:
+          userProfile:
+            - write
+      tags:
+        - userProfile
+      description: Update the user profile contact details of the requesting user
+      operationId: updateMyUserProfileContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserPersonContactRequest'
+      responses:
+        "200":
+          description: User profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
   /userProfile/me/avatar:
     get:
       x-onecx:
@@ -369,6 +427,28 @@ components:
           type: string
         person:
           $ref: '#/components/schemas/UserPerson'
+        settings:
+          type: object
+    UpdateUserPersonContactRequest:
+      type: object
+      required:
+        - modificationCount
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        address:
+          $ref: '#/components/schemas/UserPersonAddress'
+        phone:
+          $ref: '#/components/schemas/UserPersonPhone'
+    UpdateUserPersonSettingsRequest:
+      type: object
+      required:
+        - modificationCount
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
         settings:
           type: object
     UserPersonCriteria:

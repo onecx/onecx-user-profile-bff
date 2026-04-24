@@ -18,6 +18,8 @@ import gen.org.tkit.onecx.user.profile.bff.clients.api.UserProfileApi;
 import gen.org.tkit.onecx.user.profile.bff.clients.model.*;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.UserProfileApiService;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonContactRequestDTO;
+import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserPersonSettingsRequestDTO;
 import gen.org.tkit.onecx.user.profile.bff.rs.internal.model.UpdateUserProfileRequestDTO;
 
 @ApplicationScoped
@@ -54,6 +56,26 @@ public class UserProfileRestController implements UserProfileApiService {
     @Override
     public Response updateMyUserProfile(UpdateUserProfileRequestDTO updateUserProfileRequestDTO) {
         try (Response response = client.updateMyUserProfile(mapper.mapUpdate(updateUserProfileRequestDTO))) {
+            var updateResponse = response.readEntity(UserProfile.class);
+            return Response.status(response.getStatus())
+                    .entity(mapper.map(updateResponse)).build();
+        }
+    }
+
+    @Override
+    public Response updateMyUserProfileContact(UpdateUserPersonContactRequestDTO updateUserPersonContactRequestDTO) {
+        try (Response response = client
+                .updateMyUserProfileContact(mapper.mapUpdateContact(updateUserPersonContactRequestDTO))) {
+            var updateResponse = response.readEntity(UserProfile.class);
+            return Response.status(response.getStatus())
+                    .entity(mapper.map(updateResponse)).build();
+        }
+    }
+
+    @Override
+    public Response updateMyUserProfileSettings(UpdateUserPersonSettingsRequestDTO updateUserPersonSettingsRequestDTO) {
+        try (Response response = client
+                .updateMyUserProfileSettings(mapper.mapUpdateSettings(updateUserPersonSettingsRequestDTO))) {
             var updateResponse = response.readEntity(UserProfile.class);
             return Response.status(response.getStatus())
                     .entity(mapper.map(updateResponse)).build();
