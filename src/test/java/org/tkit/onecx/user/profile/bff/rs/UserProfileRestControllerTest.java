@@ -51,7 +51,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .delete()
+                .delete("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
@@ -61,7 +61,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
                 .contentType(APPLICATION_JSON)
-                .delete()
+                .delete("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.FORBIDDEN.getStatusCode());
 
@@ -78,7 +78,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .delete()
+                .delete("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
@@ -104,7 +104,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
-                .delete()
+                .delete("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -117,7 +117,7 @@ class UserProfileRestControllerTest extends AbstractTest {
         given()
                 .when()
                 .contentType(APPLICATION_JSON)
-                .get()
+                .get("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
 
@@ -148,7 +148,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .get()
+                .get("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
@@ -174,7 +174,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(USER))
                 .header(APM_HEADER_PARAM, USER)
                 .contentType(APPLICATION_JSON)
-                .get()
+                .get("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
@@ -204,7 +204,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .header(CUSTOM_FLOW_HEADER, CFH_ERROR_WITH_CONTENT)
                 .contentType(APPLICATION_JSON)
-                .get()
+                .get("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
                 .extract().as(ProblemDetailResponseDTO.class);
@@ -219,7 +219,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakClient.getAccessToken(ADMIN))
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
-                .put()
+                .put("/userProfile/me")
                 .then()
                 .contentType(APPLICATION_JSON)
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
@@ -259,7 +259,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(updateDTO)
-                .put()
+                .put("/userProfile/me")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
@@ -294,7 +294,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(updateDTO)
-                .put("/settings")
+                .put("/userProfile/me/settings")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
@@ -327,7 +327,7 @@ class UserProfileRestControllerTest extends AbstractTest {
                 .header(APM_HEADER_PARAM, ADMIN)
                 .contentType(APPLICATION_JSON)
                 .body(updateDTO)
-                .put("/contact")
+                .put("/userProfile/me/contact")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().as(UserProfileDTO.class);
